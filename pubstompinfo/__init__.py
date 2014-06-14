@@ -63,3 +63,6 @@ import views
 # Load blueprints
 from .users.views import mod as users_module
 app.register_blueprint(users_module)
+
+from .leagues.views import mod as leagues_module
+app.register_blueprint(leagues_module)

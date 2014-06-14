@@ -2,10 +2,12 @@
 @import "../bower/bourbon/dist/bourbon"
 @import "bitters/bitters"
 @import "../bower/neat/app/assets/stylesheets/neat"
+@import mixins/omega-reset
 
 // General layout
 @import nav
 @import hero
+@import cards
 @import footer
 
 // Sections
@@ -16,6 +18,14 @@ section
   &.advertisement
     border-top: $base-border-radius dashed $base-border-color
     text-align: center
+
+  &.league-page
+    &> img
+      float: right
+
+// Buttons
+a.button
+  @include button(simple, $base-accent-color)
 
 p.footnote
   font-size: $base-font-size * 0.75

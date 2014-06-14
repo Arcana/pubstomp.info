@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <section class="league-page">
+        <img src="{{ league.icon }}" alt="{{ league.name }}"/>
+        <h1>{{ league.name }}</h1>
+        <p>{{ league.description }}</p>
+        <p><a href="{{ league.tournament_url }}" class="button">View tournament website</a></p>
+    </section>
+{% endblock %}

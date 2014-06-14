@@ -18,7 +18,7 @@ CACHE_FS = {
 }
 
 # Timeouts
-UPDATE_HEROES_TIMEOUT = 60 * 60 * 6  # 6 hours
+UPDATE_LEAGUES_TIMEOUT = 60 * 60 * 6  # 6 hours
 UPDATE_USER_NAME_TIMEOUT = 60 * 60  # 1 hour
 
 
@@ -30,6 +30,7 @@ ISSUE_TRACKER_URL = "http://github.com/Arcana/pubstomp.info/issues"
 CONTACT_EMAIL = "gief@arcana.io"
 DATE_STRING_FORMAT = "%d %b %Y, %H:%M"
 USERS_PER_PAGE = 32
+LEAGUES_PER_PAGE = 12
 
 # NSA
 GA_TRACKING_SNIPPET = """
