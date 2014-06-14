@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% import "macros.html" as wtf %}
+
+{% block content %}
+    {% include "users/user_nav.html" %}
+
+    <section>
+        <form role="form" method="POST">
+            {{ form.hidden_tag() }}
+
+            <label for="{{ form.email.id }}">{{ form.email.label.text }}</label>
+            {{ form.email }}
+
+            <label for="{{ form.show_ads.id }}">{{ form.show_ads.label.text }}</label>
+            {{ form.show_ads }}
+
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+
+{% endblock %}

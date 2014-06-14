@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% from "macros.html" import logo %}
+
+{% block content %}
+    <div class="hero">
+        <div class="hero-inner">
+            <a href="{{ url_for('index') }}" class="hero-logo">{{ logo() }}</a>
+
+            <div class="hero-copy">
+                <h1>Find nearby pubstomps!</h1>
+
+                <p>Find pubstomps for any league near you! Also come up with better copy.</p>
+
+                <p>TODO: Search button for city/tournament</p>
+            </div>
+        </div>
+    </div>
+
+    <section>
+        <p>Copy copy copy copy</p>
+        <p>Copy copy copy copy</p>
+    </section>
+{% endblock %}

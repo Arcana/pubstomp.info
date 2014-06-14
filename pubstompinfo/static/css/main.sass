@@ -1,0 +1,27 @@
+@import "normalize"
+@import "../bower/bourbon/dist/bourbon"
+@import "bitters/bitters"
+@import "../bower/neat/app/assets/stylesheets/neat"
+
+// General layout
+@import nav
+@import hero
+@import footer
+
+// Sections
+section
+  @include outer-container
+  @include padding(1em inherit)
+
+  &.advertisement
+    border-top: $base-border-radius dashed $base-border-color
+    text-align: center
+
+p.footnote
+  font-size: $base-font-size * 0.75
+  color: darken($base-font-color, 50%)
+  text-align: center
+
+.footer
+  p.version
+    font-size: x-small

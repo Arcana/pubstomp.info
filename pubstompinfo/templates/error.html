@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <section>
+        <div class="page-header">
+            <h1>Error {{ error.code }} - {{ error.name }}</h1>
+        </div>
+
+        <p>
+            {{ error.description }}
+        </p>
+    </section>
+{% endblock %}

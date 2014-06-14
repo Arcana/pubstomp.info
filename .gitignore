@@ -1,0 +1,12 @@
+bin
+include
+lib
+local
+*.pyc
+.idea/*
+mysql-connector*
+pubstompinfo/static/bower/*
+pubstompinfo/static/css/*.css
+newrelic.ini
+instance/*
+alembic.ini
