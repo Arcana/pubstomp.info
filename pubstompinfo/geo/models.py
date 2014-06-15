@@ -88,7 +88,7 @@ class Geoname(db.Model):
 
             for row in tsv_data:
                 print "Importing {}".format(row[2])  # 2 is asciiname
-                _cls = cls.query.filter(cls.geonameid == row[0]).first()
+                _cls = cls.query.filter(cls.geonameid == int(row[0])).first()
                 if _cls is None:
                     _cls = cls(*row)
                 else:

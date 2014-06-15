@@ -7,6 +7,6 @@ SQLALCHEMY_DATABASE_URI = ""
 SENTRY_DSN = ""
 
 # DEBUG = True
-# If debugging, might be worth getting a smaller Geodata file (allCountries is 250MB)
-# GEODATA_URL = "http://download.geonames.org/export/dump/GB.zip"
-# GEODATA_FILE = "GB.txt"
+
+# If debugging, might be worth getting a smaller set of Geodata
+# GEODATA_COUNTRIES = ['GB', 'HU']
