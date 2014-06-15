@@ -44,6 +44,9 @@ class Geoname(db.Model):
         "order_by": [db.desc(population)]
     }
 
+    # Use MyISAM to become a race car
+    __table_args__ = {'mysql_engine': 'MyISAM'}
+
     # Static data
     CITY_CLASS = 'P'       # settlements
     COUNTRY_CLASS = 'A'    # country, state, region,...
@@ -93,6 +96,15 @@ class Geoname(db.Model):
             for chunk in grouper(tsv_data, CHUNK_SIZE):
                 print("Importing {} to {}".format(i, i+CHUNK_SIZE))
 
+                # Filter chunk, we only want cities and countries.
+                filtered_chunk = []
+                for row in chunk:
+                    if row is not None and (row[6] == cls.CITY_CLASS or (row[6] == cls.COUNTRY_CLASS and row[7] == cls.COUNTRY_CODE)):
+                        filtered_chunk.append(row)
+
+                if not len(filtered_chunk):
+                    continue
+
                 keys = [
                     'geonameid',
                     'name',
@@ -118,7 +130,7 @@ class Geoname(db.Model):
                 # Esacping %'s because MySQLdb is tries to format the string using the old string format, and errors if the data contains %.
                 query = "REPLACE INTO geoname ({}) VALUES ({})".format(
                     ",".join(keys),
-                    "), (".join(["'{}'".format("', '".join([escape_string(x.replace('%', '%%')) for x in row])) for row in chunk if row is not None])
+                    "), (".join(["'{}'".format("', '".join([escape_string(x.replace('%', '%%')) for x in row])) for row in filtered_chunk])
                 )
 
                 db.engine.execute(query)
