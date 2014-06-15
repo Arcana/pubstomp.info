@@ -114,9 +114,11 @@ class Geoname(db.Model):
                     'timezone',
                     'modification_date'
                 ]
+
+                # Esacping %'s because MySQLdb is tries to format the string using the old string format, and errors if the data contains %.
                 query = "REPLACE INTO geoname ({}) VALUES ({})".format(
                     ",".join(keys),
-                    "), (".join(["'{}'".format("', '".join([escape_string(x) for x in row])) for row in chunk if row is not None])
+                    "), (".join(["'{}'".format("', '".join([escape_string(x.replace('%', '%%')) for x in row])) for row in chunk if row is not None])
                 )
 
                 db.engine.execute(query)
