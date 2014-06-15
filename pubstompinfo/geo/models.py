@@ -54,6 +54,7 @@ class Geoname(db.Model):
     CITY_CLASS = 'P'       # settlements
     COUNTRY_CLASS = 'A'    # country, state, region,...
     COUNTRY_CODE = 'PCLI'  # independent political entity
+    CITY_MIN_POPULATION = 10000  # Settlements less than 10k in population aren't reel cities!
 
     def __init__(self, geonameid, name, asciiname, alternatenames, latitude, longitude, feature_class, feature_code,
                  country_code, cc2, admin1_code, admin2_code, admin3_code, admin4_code,
@@ -106,7 +107,7 @@ class Geoname(db.Model):
 
     @classmethod
     def get_cities(cls):
-        return cls.query.filter(cls.feature_class == cls.CITY_CLASS)
+        return cls.query.filter(cls.feature_class == cls.CITY_CLASS, cls.population >= cls.CITY_MIN_POPULATION)
 
     @classmethod
     def get_countries(cls):
