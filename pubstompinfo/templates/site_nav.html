@@ -11,6 +11,8 @@
         <div class="nav">
             <ul id="navigation-menu">
                 <li class="nav-link"><a href="{{ url_for('leagues.leagues') }}">Leagues</a></li>
+                <li class="nav-link"><a href="{{ url_for('geo.cities') }}">Cities</a></li>
+                <li class="nav-link"><a href="{{ url_for('geo.countries') }}">Countries</a></li>
 
                 {% if current_user.is_admin() %}
                     <li class="nav-link"><a href="{{ url_for('users.users') }}">Users</a></li>

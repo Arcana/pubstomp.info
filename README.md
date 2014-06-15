@@ -34,3 +34,8 @@ Easy life.
 ## License
 
 Undecided.  For now just assume the license is a 10ft 1000lbs giant with an anger problem - if you do anything remotely controversial he will eat you.
+
+
+##  Attribution
+* OpenID athentication via [Steam](http://steampowered.com/)
+* Geospatial data provided by [geonames.org](http://www.geonames.org)

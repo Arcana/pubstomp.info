@@ -52,3 +52,13 @@ def seconds_to_time(seconds):
     :return: A str which is the `seconds` as a time string (00:00:00)
     """
     return str(timedelta(seconds=seconds or 0))
+
+
+def number_format(number):
+    """
+    Takes a number and outputs a string representing the number, with thousandths separators.
+
+    :param number:
+    :return: str
+    """
+    return "{:,}".format(number)

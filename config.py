@@ -31,6 +31,14 @@ CONTACT_EMAIL = "gief@arcana.io"
 DATE_STRING_FORMAT = "%d %b %Y, %H:%M"
 USERS_PER_PAGE = 32
 LEAGUES_PER_PAGE = 12
+COUNTRIES_PER_PAGE = 64
+CITIES_PER_PAGE = 64
+
+# Geodata
+GEODATA_URL = "http://download.geonames.org/export/dump/allCountries.zip"
+GEODATA_FILE = "allCountries.txt"
+GEODATA_TMP_ZIP = "/tmp/pubstomp_geodata.zip"
+GEODATA_TMP_EXTRACT = "/tmp/pubstomp_geodata"
 
 # NSA
 GA_TRACKING_SNIPPET = """

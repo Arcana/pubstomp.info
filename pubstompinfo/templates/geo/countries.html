@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% from "macros.html" import pagination %}
+
+{% block content %}
+    <section class="countries">
+        <h1>Countries</h1>
+        <h2>Ordered by population</h2>
+
+        <table>
+            <thead>
+            <tr>
+{#                <th>ID</th>#}
+                <th>Name</th>
+{#                <th>Asciiname</th>#}
+{#                <th>Alt names</th>#}
+                <th>Lat</th>
+                <th>Long</th>
+{#                <th>Feature Class</th>#}
+{#                <th>Feature Code</th>#}
+                <th>Country Code</th>
+{#                <th>Alt Country Codes</th>#}
+{#                <th>Admin1 Code</th>#}
+{#                <th>Admin2 Code</th>#}
+{#                <th>Admin3 Code</th>#}
+{#                <th>Admin4 Code</th>#}
+                <th>Population</th>
+                <th>Elevation</th>
+{#                <th>Dem (wot)</th>#}
+                <th>Timezone</th>
+{#                <th>Modification Date</th>#}
+            </tr>
+            </thead>
+            <tbody>
+            {% for country in countries.items %}
+                <tr>
+{#                    <td>{{ country.geonameid }}</td>#}
+                    <td>{{ country.name }}</td>
+{#                    <td>{{ country.asciiname }}</td>#}
+{#                    <td>{{ country.alternatenames }}</td>#}
+                    <td>{{ country.latitude }}</td>
+                    <td>{{ country.longitude }}</td>
+{#                    <td>{{ country.feature_class }}</td>#}
+{#                    <td>{{ country.feature_code }}</td>#}
+                    <td>{{ country.country_code }}</td>
+{#                    <td>{{ country.cc2 }}</td>#}
+{#                    <td>{{ country.admin1_code }}</td>#}
+{#                    <td>{{ country.admin2_code }}</td>#}
+{#                    <td>{{ country.admin3_code }}</td>#}
+{#                    <td>{{ country.admin4_code }}</td>#}
+                    <td>{{ country.population | number_format }}</td>
+                    <td>{{ country.elevation }}</td>
+{#                    <td>{{ country.dem }}</td>#}
+                    <td>{{ country.timezone }}</td>
+{#                    <td>{{ country.modification_date }}</td>#}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {{ pagination(countries, "geo.countries") }}
+    </section>
+{% endblock %}

@@ -46,11 +46,13 @@ if app.debug:
 from .filters import escape_every_character,\
     timestamp_to_datestring,\
     datetime_to_datestring,\
-    seconds_to_time
+    seconds_to_time,\
+    number_format
 app.add_template_filter(escape_every_character)
 app.add_template_filter(timestamp_to_datestring)
 app.add_template_filter(datetime_to_datestring)
 app.add_template_filter(seconds_to_time)
+app.add_template_filter(number_format)
 
 
 # Load current app version into globals
@@ -66,3 +68,6 @@ app.register_blueprint(users_module)
 
 from .leagues.views import mod as leagues_module
 app.register_blueprint(leagues_module)
+
+from .geo.views import mod as geo_module
+app.register_blueprint(geo_module)
