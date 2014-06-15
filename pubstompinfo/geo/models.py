@@ -8,6 +8,9 @@ import os
 import csv
 from ..helpers import grouper
 from MySQLdb import escape_string
+from flask_sqlalchemy import Pagination
+from flask import abort
+from sqlalchemy import func
 
 
 class Geoname(db.Model):
@@ -74,6 +77,32 @@ class Geoname(db.Model):
         self.dem = dem
         self.timezone = timezone
         self.modification_date = modification_date
+
+    @classmethod
+    def paginate(cls, query, page, per_page=20, error_out=True):
+        """Returns `per_page` items from page `page`.  By default it will
+        abort with 404 if no items were found and the page was larger than
+        1.  This behavor can be disabled by setting `error_out` to `False`.
+
+        BaseQuery.paginate's count operation is too expensive if we have any filters,
+        so we use a custom count here - as we know the model's fields.
+
+        Returns an :class:`Pagination` object.
+        """
+        if error_out and page < 1:
+            abort(404)
+        items = query.limit(per_page).offset((page - 1) * per_page).all()
+        if not items and page != 1 and error_out:
+            abort(404)
+
+        # No need to count if we're on the first page and there are fewer
+        # items than we expected.
+        if page == 1 and len(items) < per_page:
+            total = len(items)
+        else:
+            total = query.order_by(None).with_entities(func.count(cls.geonameid)).scalar()
+
+        return Pagination(query, page, per_page, total, items)
 
     @classmethod
     def get_cities(cls):
