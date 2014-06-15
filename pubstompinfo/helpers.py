@@ -1,5 +1,6 @@
 from subprocess import check_output, CalledProcessError
 from . import sentry
+from itertools import izip_longest
 
 
 def current_version():
@@ -15,3 +16,8 @@ def current_version():
     except CalledProcessError:
         sentry.captureException()
         return ""
+
+
+def grouper(iterable, n, fillvalue=None):
+    args = [iter(iterable)] * n
+    return izip_longest(*args, fillvalue=fillvalue)

@@ -6,6 +6,8 @@ http://download.geonames.org/export/dump/readme.txt
 from .. import db
 import os
 import csv
+from ..helpers import grouper
+from MySQLdb import escape_string
 
 
 class Geoname(db.Model):
@@ -86,14 +88,36 @@ class Geoname(db.Model):
         with open(filepath, 'rb') as tsv_file:
             tsv_data = csv.reader(tsv_file, delimiter='\t', quoting=csv.QUOTE_NONE)
 
-            for row in tsv_data:
-                print "Importing {}".format(row[2])  # 2 is asciiname
-                _cls = cls.query.filter(cls.geonameid == int(row[0])).first()
-                if _cls is None:
-                    _cls = cls(*row)
-                else:
-                    _cls.__init__(*row)  # Update deets
+            i = 0
+            CHUNK_SIZE = 1024
+            for chunk in grouper(tsv_data, CHUNK_SIZE):
+                print("Importing {} to {}".format(i, i+CHUNK_SIZE))
 
-                db.session.add(_cls)
+                keys = [
+                    'geonameid',
+                    'name',
+                    'asciiname',
+                    'alternatenames',
+                    'latitude',
+                    'longitude',
+                    'feature_class',
+                    'feature_code',
+                    'country_code',
+                    'cc2',
+                    'admin1_code',
+                    'admin2_code',
+                    'admin3_code',
+                    'admin4_code',
+                    'population',
+                    'elevation',
+                    'dem',
+                    'timezone',
+                    'modification_date'
+                ]
+                query = "REPLACE INTO geoname ({}) VALUES ({})".format(
+                    ",".join(keys),
+                    "), (".join(["'{}'".format("', '".join([escape_string(x) for x in row])) for row in chunk if row is not None])
+                )
 
-        db.session.commit()
+                db.engine.execute(query)
+                i += CHUNK_SIZE
