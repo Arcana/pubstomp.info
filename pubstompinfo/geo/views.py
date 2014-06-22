@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, abort
 from models import Geoname
 from ..events.models import Event
 from .. import db
@@ -20,6 +20,8 @@ def countries(page=1):
 @mod.route("/cities")
 @mod.route("/cities/page/<int:page>/")
 def cities(page=1):
+    abort(501)  # Gotta make tihs go fast somehow
+
     _cities = Geoname.get_cities(). \
         outerjoin(Event). \
         group_by(Geoname.geonameid). \
