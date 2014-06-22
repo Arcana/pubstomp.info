@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% from "macros.html" import pagination %}
+
+{% block content %}
+    <section class="city">
+        <h1>{{ city }}</h1>
+
+        <dl>
+            <dt>geonameid</dt>
+            <dd>{{ city.geonameid }}</dd>
+            <dt>name</dt>
+            <dd>{{ city.name }}</dd>
+            <dt>asciiname</dt>
+            <dd>{{ city.asciiname }}</dd>
+            <dt>alternatenames</dt>
+            <dd>{{ city.alternatenames }}</dd>
+            <dt>latitude</dt>
+            <dd>{{ city.latitude }}</dd>
+            <dt>longitude</dt>
+            <dd>{{ city.longitude }}</dd>
+            <dt>feature_class</dt>
+            <dd>{{ city.feature_class }}</dd>
+            <dt>feature_code</dt>
+            <dd>{{ city.feature_code }}</dd>
+            <dt>country_code</dt>
+            <dd>{{ city.country_code }}</dd>
+            <dt>cc2</dt>
+            <dd>{{ city.cc2 }}</dd>
+            <dt>admin1_code</dt>
+            <dd>{{ city.admin1_code }}</dd>
+            <dt>admin2_code</dt>
+            <dd>{{ city.admin2_code }}</dd>
+            <dt>admin3_code</dt>
+            <dd>{{ city.admin3_code }}</dd>
+            <dt>admin4_code</dt>
+            <dd>{{ city.admin4_code }}</dd>
+            <dt>population</dt>
+            <dd>{{ city.population }}</dd>
+            <dt>elevation</dt>
+            <dd>{{ city.elevation }}</dd>
+            <dt>dem</dt>
+            <dd>{{ city.dem }}</dd>
+            <dt>timezone</dt>
+            <dd>{{ city.timezone }}</dd>
+        </dl>
+
+        {% if city.events.count() > 0 %}
+            <h2>Events</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>League</th>
+                    <th>City</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for event in city.events %}
+                    <tr>
+                        <td><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></td>
+                        <td>{{ event.league.name }}</td>
+                        <td>{{ event.city }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </section>
+{% endblock %}

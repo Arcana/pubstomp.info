@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, current_app
 from models import Geoname
+from ..events.models import Event
+from .. import db
 
 
 mod = Blueprint("geo", __name__, url_prefix="/geo")
@@ -8,7 +10,7 @@ mod = Blueprint("geo", __name__, url_prefix="/geo")
 @mod.route("/countries")
 @mod.route("/countries/page/<int:page>/")
 def countries(page=1):
-    _countries = Geoname.paginate(Geoname.get_countries(), page, current_app.config['COUNTRIES_PER_PAGE'])
+    _countries = Geoname.get_countries().paginate(page, current_app.config['COUNTRIES_PER_PAGE'])
 
     return render_template("geo/countries.html",
                            title="Countries - {}".format(current_app.config['SITE_NAME']),
@@ -18,8 +20,28 @@ def countries(page=1):
 @mod.route("/cities")
 @mod.route("/cities/page/<int:page>/")
 def cities(page=1):
-    _cities = Geoname.paginate(Geoname.get_cities(), page, current_app.config['CITIES_PER_PAGE'])
+    _cities = Geoname.get_cities(). \
+        outerjoin(Event). \
+        group_by(Geoname.geonameid). \
+        order_by(db.func.count(Event.id).desc()
+    ).paginate(page, current_app.config['CITIES_PER_PAGE'])
+
+    # Get counts for this page of cities (fuck knows how to include it with the above call ^)
+    counts = dict(db.session.query(Event.city_id, db.func.count(Event.id)).group_by(Event.city_id).filter(
+        Event.city_id.in_([city.geonameid for city in _cities.items])).all())
+
+    for item in _cities.items:
+        item.events_count = counts.get(item.geonameid) or 0
 
     return render_template("geo/cities.html",
                            title="Cities - {}".format(current_app.config['SITE_NAME']),
                            cities=_cities)
+
+
+@mod.route("/cities/<int:_id>")
+def city(_id):
+    _city = Geoname.query.filter(Geoname.geonameid == _id).first_or_404()
+
+    return render_template("geo/city.html",
+                           title=u"{} - {}".format(_city.name, current_app.config['SITE_NAME']),
+                           city=_city)
