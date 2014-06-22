@@ -71,3 +71,6 @@ app.register_blueprint(leagues_module)
 
 from .geo.views import mod as geo_module
 app.register_blueprint(geo_module)
+
+from .events.views import mod as event_module
+app.register_blueprint(event_module)

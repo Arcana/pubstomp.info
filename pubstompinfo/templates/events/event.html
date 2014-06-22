@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <section class="event-page">
+        <h1>{{ event.name }}</h1>
+        <nav>
+            <a class="button" href="{{ url_for('events.edit', _id=event.id) }}">Edit event</a>
+        </nav>
+
+        <p>{{ event.description }}</p>
+
+        <dl>
+            <dt>League</dt>
+            <dd>{{ event.league.name }}</dd>
+
+            <dt>City</dt>
+            <dd>{{ event.city }}</dd>
+
+            <dt>Website</dt>
+            <dd>{% if event.website %}<a href="{{ event.website }}">{{ event.website }}</a>{% else %} - {% endif %}</dd>
+        </dl>
+
+        <h2>Organisers</h2>
+        <ul>
+            {% for organiser in event.organisers %}
+                <li><a href="{{ url_for("users.user", _id=organiser.id) }}">{{ organiser }}</a></li>
+            {% endfor %}
+        </ul>
+
+        {% if event.venue %}
+            <h2>Venue</h2>
+
+            <dl>
+                <dt>Name</dt>
+                <dd>{{ event.venue.name }}</dd>
+                <dt>Capacity</dt>
+                <dd>{{ event.venue.capacity }}</dd>
+                <dt>Address 1</dt>
+                <dd>{{ event.venue.address1 }}</dd>
+                <dt>Address 2</dt>
+                <dd>{{ event.venue.address2 }}</dd>
+                <dt>City</dt>
+                <dd>{{ event.city.name }}</dd>
+                <dt>Country</dt>
+                <dd>{{ event.city.country_code }}</dd>
+            </dl>
+        {% endif %}
+
+    </section>
+{% endblock %}

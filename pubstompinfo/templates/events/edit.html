@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_field %}
+
+{% block content %}
+    <section class="event-page">
+        {% if event == None %}
+            <h1>Register a new event</h1>
+        {% else %}
+            <h1>Edit {{ event }}</h1>
+        {% endif %}
+
+        <form role="form" method="POST" class="event-form">
+            {{ form.hidden_tag() }}
+
+            <fieldset id="event-details">
+                <h2>Event details</h2>
+
+                <div class="two-col">
+                    {{ render_field(form.name) }}
+                    {{ render_field(form.website) }}
+                    {{ render_field(form.league) }}
+                    {{ render_field(form.city) }}
+                </div>
+
+                {{ render_field(form.description) }}
+            </fieldset>
+
+            <fieldset id="venue-details">
+                <h2>Venue details</h2>
+
+                <div class="fields">
+                    {{ render_field(form.venue_name) }}
+                    {{ render_field(form.venue_capacity) }}
+
+                    {{ render_field(form.venue_address1) }}
+                    {{ render_field(form.venue_address2) }}
+                </div>
+            </fieldset>
+
+            <button type="submit">Save event</button>
+        </form>
+
+    </section>
+{% endblock %}

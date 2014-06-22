@@ -16,6 +16,11 @@ class League(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
 
+    events = db.relationship('Event', backref='league', lazy="dynamic")
+
+    def __repr__(self):
+        return "{} (league id: {})".format(self.name, self.id)
+
     def __init__(self, _id=None, name=None, description=None, tournament_url=None, itemdef=None, fetch_images=True):
         self.id = _id
         self.name = name
