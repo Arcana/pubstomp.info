@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, current_app, abort
-from .. import mem_cache, sentry
+from .. import mem_cache, sentry, db
 from models import League
+from ..events.models import Event
 
 
 mod = Blueprint("leagues", __name__, url_prefix="/leagues")
@@ -9,7 +10,10 @@ mod = Blueprint("leagues", __name__, url_prefix="/leagues")
 @mod.route("/")
 @mod.route("/page/<int:page>/")
 def leagues(page=1):
-    _leagues = League.query.paginate(page, current_app.config['LEAGUES_PER_PAGE'])
+    _leagues = League.query.outerjoin(Event).\
+        group_by(League.id).\
+        order_by(db.func.count(Event.id).desc()).\
+        paginate(page, current_app.config['LEAGUES_PER_PAGE'])
 
     return render_template("leagues/leagues.html",
                            title="Leagues - {}".format(current_app.config['SITE_NAME']),

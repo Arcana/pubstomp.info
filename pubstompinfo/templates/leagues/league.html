@@ -6,5 +6,27 @@
         <h1>{{ league.name }}</h1>
         <p>{{ league.description }}</p>
         <p><a href="{{ league.tournament_url }}" class="button">View tournament website</a></p>
+
+        {% if league.events.count() > 0 %}
+        <h2>Events</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>League</th>
+                <th>City</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for event in league.events %}
+                <tr>
+                    <td><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></td>
+                    <td>{{ event.league.name }}</td>
+                    <td>{{ event.city }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
     </section>
 {% endblock %}

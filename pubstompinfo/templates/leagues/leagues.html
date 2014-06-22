@@ -22,8 +22,8 @@
         </div>
         <div class="card-stats">
             <ul>
-                <li>298<span>Cities</span></li>
-                <li>98<span>Pubstomps</span></li>
+                <li>{{ league.events|groupby(attribute="city")|list|length }}<span>Cities</span></li>
+                <li>{{ league.events.count() }} <span>Pubstomps</span></li>
             </ul>
         </div>
     </div>
