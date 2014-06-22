@@ -36,8 +36,7 @@ def upgrade():
     sa.Column('dem', sa.Integer(), nullable=True),
     sa.Column('timezone', sa.String(length=40), nullable=True),
     sa.Column('modification_date', sa.Date(), nullable=True),
-    sa.PrimaryKeyConstraint('geonameid'),
-    mysql_engine='MyISAM'
+    sa.PrimaryKeyConstraint('geonameid')
     )
     ### end Alembic commands ###
 

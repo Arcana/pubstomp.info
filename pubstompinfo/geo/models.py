@@ -49,9 +49,6 @@ class Geoname(db.Model):
         "order_by": [db.desc(population)]
     }
 
-    # Use MyISAM to become a race car
-    __table_args__ = {'mysql_engine': 'MyISAM'}
-
     # Static data
     CITY_CLASS = 'P'       # settlements
     COUNTRY_CLASS = 'A'    # country, state, region,...
