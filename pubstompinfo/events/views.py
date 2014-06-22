@@ -31,8 +31,14 @@ def event(_id):
 @login_required
 def edit(_id=None):
     _event = Event.query.filter(Event.id == _id).first()
-    if _event is None:
+    if _event is not None:
+        # Check if current user is an event organiser, if not they can't edit the event.
+        if _event.can_edit(current_user) is False:
+            abort(403)
+    else:
+        # We're making a new event
         _event = Event()
+        _event.organisers.append(current_user)
 
     event_form = EventForm(obj=_event)
 
@@ -61,8 +67,6 @@ def edit(_id=None):
         elif venue.id is not None:
             # It if doesn't have a name and it exists already, delete it's entry.
             db.session.delete(venue)
-
-        _event.organisers.append(current_user)
 
         db.session.commit()
 

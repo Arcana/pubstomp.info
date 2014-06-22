@@ -43,6 +43,13 @@ class Event(db.Model):
     def __repr__(self):
         return self.name or ""
 
+    def can_edit(self, user):
+        """ Checks whether the given user is allowed to edit this event.
+        :param user: User
+        :return: bool
+        """
+        return user in self.organisers or user.is_admin()
+
 
 class EventDay(db.Model):
     """ Represents a day at an event, as events may last many days with start and end times differing per-day. """

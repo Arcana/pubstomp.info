@@ -4,7 +4,9 @@
     <section class="event-page">
         <h1>{{ event.name }}</h1>
         <nav>
-            <a class="button" href="{{ url_for('events.edit', _id=event.id) }}">Edit event</a>
+            {% if event.can_edit(current_user) %}
+                <a class="button" href="{{ url_for('events.edit', _id=event.id) }}">Edit event</a>
+            {% endif %}
         </nav>
 
         <p>{{ event.description }}</p>

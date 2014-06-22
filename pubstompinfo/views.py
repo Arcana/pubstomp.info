@@ -26,7 +26,7 @@ def internalerror(error):
             error.description = "I'm sorry Dave, I'm afraid I can't do that.  Try logging in."
         elif error.code == 403:
             if current_user.is_authenticated():
-                error.description = "I'm sorry {{ current_user.name }}, I'm afraid I can't do that.  You do not have access to this resource.</p>"
+                error.description = "I'm sorry {}, I'm afraid I can't do that.  You do not have access to this resource.".format(current_user.name)
             else:
                 # Shouldn't output 403 unless the user is logged in.
                 error.description = "Hacker."
