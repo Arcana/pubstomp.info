@@ -2,6 +2,7 @@ from flask.ext.wtf import Form
 from wtforms import TextField, IntegerField, TextAreaField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from wtforms.validators import Required, Length, URL, Optional
+from ..forms import AutocompleteField
 
 from ..geo.models import Geoname
 from ..leagues.models import League
@@ -22,10 +23,17 @@ class EventForm(Form):
                               validators=[Required()],
                               description="Which league is this pubstomp gathering to watch?",
                               query_factory=all_leagues)
-    city = QuerySelectField("City",
-                            validators=[Required()],
-                            description="In which city is this pubstomp being held?",
-                            query_factory=all_cities)
+
+    # city = QuerySelectField("City",
+    #                         validators=[Required()],
+    #                         description="In which city is this pubstomp being held?",
+    #                         query_factory=all_cities)
+
+    city = AutocompleteField("City",
+                             validators=[Required()],
+                             get_id="geonameid",
+                             getter=lambda x: Geoname.get_cities().filter(Geoname.geonameid == x).first()
+    )
 
     name = TextField("Name", validators=[Required(), Length(max=64)])
     description = TextAreaField("Description", validators=[Optional()])

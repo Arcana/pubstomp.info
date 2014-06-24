@@ -141,3 +141,20 @@ class Geoname(db.Model):
 
                 db.engine.execute(query)
                 i += CHUNK_SIZE
+
+    @classmethod
+    def city_autocomplete(cls, query, cc=None, limit=64):
+        """
+        Searches for cities with names leading with `query`.
+
+        :param query: Name prefix to search for
+        :param limit: Limit results to this many items
+        :return:
+        """
+        if cc is None:
+            return cls.get_cities().filter(cls.name.like("{}%".format(query))).limit(limit).all()
+        else:
+            return cls.get_cities().filter(
+                cls.name.like("{}%".format(query)),
+                cls.country_code.like("{}%".format(cc))
+            ).limit(limit).all()

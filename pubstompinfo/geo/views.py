@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, current_app, abort
+from flask import Blueprint, render_template, current_app, abort, jsonify
 from models import Geoname
 from ..events.models import Event
 from .. import db
 
+import json
 
 mod = Blueprint("geo", __name__, url_prefix="/geo")
 
@@ -47,3 +48,17 @@ def city(_id):
     return render_template("geo/city.html",
                            title=u"{} - {}".format(_city.name, current_app.config['SITE_NAME']),
                            city=_city)
+
+
+@mod.route("/cities/autocomplete/<string:query>.json")
+def city_autocomplete(query=None):
+    if "," in query:
+        query, delim, cc = query.partition(",")
+        data = Geoname.city_autocomplete(query.strip(), cc=cc.strip())
+    else:
+        data = Geoname.city_autocomplete(query)
+
+    return json.dumps([{
+        "value": item.geonameid,
+        "name": unicode(item)
+    } for item in data])
