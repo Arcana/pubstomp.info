@@ -8,6 +8,7 @@ from flask.ext.cache import Cache
 from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.pagedown import PageDown
 from raven.contrib.flask import Sentry
 import steam
 import os
@@ -29,6 +30,7 @@ fs_cache = Cache(app, config=app.config["CACHE_FS"])
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 oid = OpenID(app)
+pagedown = PageDown(app)
 
 sentry = Sentry(app)
 

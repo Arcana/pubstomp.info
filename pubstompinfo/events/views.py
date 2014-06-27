@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, current_app, abort, flash, redirect, url_for
 from flask_login import login_required, current_user
 from .. import mem_cache, sentry, db
-from models import Event, EventVenue
+from models import Event, EventVenue, EventDay
 from forms import EventForm
 
 
@@ -43,23 +43,25 @@ def edit(_id=None):
     event_form = EventForm(obj=_event)
 
     if event_form.validate_on_submit():
-        _event.city_id = event_form.city.data.geonameid
         _event.league_id = event_form.league.data.id
+        _event.city_id = event_form.city.data.geonameid
         _event.name = event_form.name.data
         _event.description = event_form.description.data
         _event.website = event_form.website.data
         db.session.add(_event)
         db.session.flush()
 
+        # Venue
         venue = _event.venue
         if venue is None:
             venue = EventVenue()
 
         venue.event_id = _event.id
-        venue.name = event_form.venue_name.data
-        venue.address1 = event_form.venue_address1.data
-        venue.address2 = event_form.venue_address2.data
-        venue.capacity = event_form.venue_capacity.data
+        venue.name = event_form.venue.display_name.data
+        venue.address1 = event_form.venue.address1.data
+        venue.address2 = event_form.venue.address2.data
+        venue.zip_code = event_form.venue.zip_code.data
+        venue.capacity = event_form.venue.capacity.data
 
         if venue.name:
             # Save the venue if it has a name
@@ -67,6 +69,20 @@ def edit(_id=None):
         elif venue.id is not None:
             # It if doesn't have a name and it exists already, delete it's entry.
             db.session.delete(venue)
+
+        # Delete all existing days
+        for day in _event.days:
+            db.session.delete(day)
+
+        # Create new days from form data
+        for _day in event_form.days:
+            if _day.start_time.data and _day.end_time.data:
+                day = EventDay(
+                    _event.id,
+                    _day.start_timedata,
+                    _day.end_time.data,
+                )
+                db.session.add(day)
 
         db.session.commit()
 

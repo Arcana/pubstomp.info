@@ -83,6 +83,9 @@
     {% endif %}
     <script src="{{ url_for('static', filename='js/_nav.js') }}"></script>
     {{ config['GA_TRACKING_SNIPPET']|safe }}
+
+    {{ pagedown.include_pagedown() }}
+    <script src="{{ url_for('static', filename='js/_markdown.js') }}"></script>
 {% endblock %}
 </body>
 </html>

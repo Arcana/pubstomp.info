@@ -9,7 +9,7 @@
             {% endif %}
         </nav>
 
-        <p>{{ event.description }}</p>
+        <div class="markdown">{{ event.description }}</div>
 
         <dl>
             <dt>League</dt>
@@ -34,18 +34,41 @@
 
             <dl>
                 <dt>Name</dt>
-                <dd>{{ event.venue.name }}</dd>
+                <dd>{{ event.venue.name or "-" }}</dd>
                 <dt>Capacity</dt>
-                <dd>{{ event.venue.capacity }}</dd>
+                <dd>{{ event.venue.capacity or "-" }}</dd>
                 <dt>Address 1</dt>
-                <dd>{{ event.venue.address1 }}</dd>
+                <dd>{{ event.venue.address1 or "-" }}</dd>
                 <dt>Address 2</dt>
-                <dd>{{ event.venue.address2 }}</dd>
+                <dd>{{ event.venue.address2 or "-" }}</dd>
                 <dt>City</dt>
-                <dd>{{ event.city.name }}</dd>
+                <dd>{{ event.city.name or "-" }}</dd>
                 <dt>Country</dt>
-                <dd>{{ event.city.country_code }}</dd>
+                <dd>{{ event.city.country_code or "-" }}</dd>
+                <dt>Zip code</dt>
+                <dd>{{ event.venue.zip_code or "-" }}</dd>
             </dl>
+        {% endif %}
+
+        {% if event.days|length > 0 %}
+            <h2>Days</h2>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Opening time</th>
+                    <th>Closing time</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for day in event.days %}
+                    <tr>
+                        <td>{{ day.start_time }}</td>
+                        <td>{{ day.end_time }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
 
     </section>

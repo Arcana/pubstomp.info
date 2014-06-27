@@ -51,9 +51,9 @@
         {{ render_field_label(field) }}
 
         {% if field.flags.required %}
-            {{ field(placeholder=field.label.text, required="required") }}
+            {{ field(placeholder=field.label.text, required="required", **kwargs) }}
         {% else %}
-            {{ field(placeholder=field.label.text) }}
+            {{ field(placeholder=field.label.text, **kwargs) }}
         {% endif %}
 
         {{ render_field_description(field) }}
@@ -70,7 +70,7 @@
 
 {% macro render_field_description(field) %}
     {% if field.description %}
-        <span class="description">{{ field.description }}</span>
+        <span class="description">{{ field.description|safe }}</span>
     {% endif %}
 {% endmacro %}
 

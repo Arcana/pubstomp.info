@@ -22,18 +22,42 @@
                     {{ render_typeahead_field(form.city) }}
                 </div>
 
-                {{ render_field(form.description) }}
+                {{ render_field(form.description, rows=5) }}
             </fieldset>
 
             <fieldset id="venue-details">
                 <h2>Venue details</h2>
+                <p>Feel free to enter "TBD" to the required fields if you aren't committed to a venue yet.</p>
 
-                <div class="fields">
-                    {{ render_field(form.venue_name) }}
-                    {{ render_field(form.venue_capacity) }}
+                <div class="two-col">
+                    {{ render_field(form.venue.display_name) }}
+                    {{ render_field(form.venue.capacity) }}
 
-                    {{ render_field(form.venue_address1) }}
-                    {{ render_field(form.venue_address2) }}
+                    {{ render_field(form.venue.address1) }}
+                    {{ render_field(form.venue.address2) }}
+                    {{ render_field(form.venue.zip_code) }}
+                </div>
+                <div><em>Other address data will be inferred from the <code>city</code> set above.</code></em></div>
+            </fieldset>
+
+            <fieldset id="days">
+                <h2>Days</h2>
+
+                <div class="three-col">
+                    {% for day in form.days %}
+                        <div id="{{ day.name }}" class="day">
+                            {{ render_field(day.start_time) }}
+                            {{ render_field(day.end_time) }}
+
+                            <div class="field">
+                                <label for="">&nbsp;</label>
+                                <button id="{{ day.name }}-remove" class="remove-button">&times;</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div>
+                    <button id="new-day">Add another day</button>
                 </div>
             </fieldset>
 
@@ -48,7 +72,26 @@
 
     <script src="{{ url_for('static', filename="bower/typeahead.js/dist/typeahead.bundle.js") }}"></script>
     <script>
+
+        // Credit to http://stackoverflow.com/a/8396020/1930516
+        function clone_field_list(selector) {
+            var new_element = $(selector).clone(true);
+            var elem_id = new_element.find(':input')[0].id;
+            var elem_num = parseInt(elem_id.replace(/.*-(\d{1,4})-.*/m, '$1')) + 1;
+            new_element.find(':input').each(function () {
+                var id = $(this).attr('id').replace('-' + (elem_num - 1) + '-', '-' + elem_num + '-');
+                $(this).attr({'name': id, 'id': id}).val('').removeAttr('checked');
+            });
+            new_element.find('label').each(function () {
+                var new_for = $(this).attr('for').replace('-' + (elem_num - 1) + '-', '-' + elem_num + '-');
+                $(this).attr('for', new_for);
+            });
+            $(selector).after(new_element);
+        }
+
+
         $(document).ready(function () {
+            // City Autocomplete
             var city_source = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -67,6 +110,20 @@
                 source: city_source.ttAdapter()
             }).on("typeahead:selected typeahead:autocompleted", function(e,datum) {
                 $('input[name="city"]').val(datum.value);
+            });
+
+            // Days
+            $('#days button#new-day').click(function (e) {
+                e.preventDefault();
+                clone_field_list('#days .day:last');
+            });
+            $('#days button.remove-button').click(function (e) {
+                e.preventDefault();
+
+                // Remove this element if there is at least 1 other day element
+                if ($('div.day').length > 1) {
+                    $(this).parents('div.day').remove();
+                }
             });
         });
     </script>

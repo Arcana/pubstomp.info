@@ -1,6 +1,5 @@
 from .. import db
 import datetime
-from sqlalchemy.ext.associationproxy import association_proxy
 
 
 event_organisers = db.Table("event_organiser",
@@ -27,11 +26,6 @@ class Event(db.Model):
                                  lazy="joined")
 
     venue = db.relationship('EventVenue', backref='event', lazy="joined", uselist=False)
-    venue_id = association_proxy('venue', 'id')
-    venue_name = association_proxy('venue', 'name')
-    venue_address1 = association_proxy('venue', 'address1')
-    venue_address2 = association_proxy('venue', 'address2')
-    venue_capacity = association_proxy('venue', 'capacity')
 
     def __init__(self, city_id=None, league_id=None, name=None, description=None, website=None):
         self.city_id = city_id
@@ -60,6 +54,11 @@ class EventDay(db.Model):
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
 
+    # Set default order by
+    __mapper_args__ = {
+        "order_by": [db.asc(start_time)]
+    }
+
     def __init__(self, event_id=None, start_time=None, end_time=None):
         self.event_id = event_id
         self.start_time = start_time
@@ -75,6 +74,7 @@ class EventVenue(db.Model):
     name = db.Column(db.String(64), nullable=False)
     address1 = db.Column(db.String(64), nullable=False)
     address2 = db.Column(db.String(64))
+    zip_code = db.Column(db.String(64))  # Probably doesn't need to be 64 chars, but who gives a fuck
     # Rest of address will be served by event.city
 
     capacity = db.Column(db.Integer)
@@ -88,3 +88,13 @@ class EventVenue(db.Model):
         self.address1 = address1
         self.address2 = address2
         self.capacity = kappacity
+
+    @property
+    def display_name(self):
+        """ Proxy for self.name, because WTForms doesn't like "name" in a formfield - so we're using display_name there. """
+        return self.name
+
+    @display_name.setter
+    def display_name(self, value):
+        """ Proxy for self.name, because WTForms doesn't like "name" in a formfield - so we're using display_name there. """
+        self.name = value
