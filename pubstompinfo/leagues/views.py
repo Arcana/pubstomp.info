@@ -10,7 +10,7 @@ mod = Blueprint("leagues", __name__, url_prefix="/leagues")
 @mod.route("/")
 @mod.route("/page/<int:page>/")
 def leagues(page=1):
-    _leagues = League.query.outerjoin(Event).\
+    _leagues = League.query.join(Event).\
         group_by(League.id).\
         order_by(db.func.count(Event.id).desc()).\
         paginate(page, current_app.config['LEAGUES_PER_PAGE'])

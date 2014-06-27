@@ -8,7 +8,7 @@ import json
 mod = Blueprint("geo", __name__, url_prefix="/geo")
 
 
-@mod.route("/countries")
+@mod.route("/countries/")
 @mod.route("/countries/page/<int:page>/")
 def countries(page=1):
     _countries = Geoname.get_countries().paginate(page, current_app.config['COUNTRIES_PER_PAGE'])
@@ -18,13 +18,11 @@ def countries(page=1):
                            countries=_countries)
 
 
-@mod.route("/cities")
+@mod.route("/cities/")
 @mod.route("/cities/page/<int:page>/")
 def cities(page=1):
-    abort(501)  # Gotta make tihs go fast somehow
-
     _cities = Geoname.get_cities(). \
-        outerjoin(Event). \
+        join(Event). \
         group_by(Geoname.geonameid). \
         order_by(db.func.count(Event.id).desc()
     ).paginate(page, current_app.config['CITIES_PER_PAGE'])
