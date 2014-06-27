@@ -37,8 +37,8 @@ class DayForm(Form):
             raise ValidationError('Closing time must be after opening time.')
 
     def validate_start_time(self, field):
-        if self.start_time.data <= field.data:
-            raise ValidationError('Opening time must be after closing time.')
+        if self.end_time.data <= field.data:
+            raise ValidationError('Opening time must be before closing time.')
 
     def __init__(self, csrf_enabled=False, *args, **kwargs):
         super(DayForm, self).__init__(csrf_enabled=csrf_enabled, *args, **kwargs)

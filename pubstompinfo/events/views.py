@@ -79,7 +79,7 @@ def edit(_id=None):
             if _day.start_time.data and _day.end_time.data:
                 day = EventDay(
                     _event.id,
-                    _day.start_timedata,
+                    _day.start_time.data,
                     _day.end_time.data,
                 )
                 db.session.add(day)
