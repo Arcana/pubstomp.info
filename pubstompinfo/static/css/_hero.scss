@@ -2,10 +2,7 @@
   $hero-background: desaturate(darken($base-accent-color, 20), 30);
   $hero-color: white;
 
-  background: url('../img/hero_background.png');
-  background-color: $hero-background;
-  background-repeat: no-repeat;
-  background-position: center;
+  background: $hero-background url('../img/hero_background.jpg') no-repeat center;
   background-size: cover;
 
   .hero-logo img {
@@ -40,8 +37,7 @@
       }
 
       p {
-        margin: auto;
-        margin-bottom: 3em;
+        margin: 1.5em auto;
         font-weight: 200;
 
         @include media($large-screen) {
