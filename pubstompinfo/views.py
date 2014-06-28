@@ -1,7 +1,8 @@
 from flask import render_template
 from . import app, db
 from flask.ext.login import current_user
-
+from events.models import Event, EventDay
+from datetime import datetime
 
 # Routes
 @app.route('/')
@@ -11,7 +12,10 @@ def index():
     :return: Response
     """
 
-    return render_template("index.html")
+    events = Event.query.filter(Event.days.any(EventDay.end_time > datetime.now()))
+
+    return render_template("index.html",
+                           events=events)
 
 
 @app.errorhandler(401)  # Unauthorized
