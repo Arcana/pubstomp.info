@@ -29,6 +29,26 @@ section
     &> img
       float: right
 
+  &.see-also
+    table
+      tr
+        td, th
+          padding-right: 1em
+
+          &:nth-child(1)
+            text-align: right
+            width: 25%
+
+          &:nth-child(2)
+            text-align: left
+            width: auto
+
+          &:nth-child(3)
+            text-align: left
+            padding-right: 0
+            width: 71px
+
+
   @include breakpoint($medium-screen)
     &.home-page
       .popular-cities,
