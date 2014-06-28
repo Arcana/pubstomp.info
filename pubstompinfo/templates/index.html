@@ -141,7 +141,7 @@
                 });
 
                 infowindows[{{ loop.index }}] = new google.maps.InfoWindow({
-                    content: '<div class="info-window">' +
+                    content: '<div>' +
                             '<dl>' +
                             '<dt>Event name</dt>' +
                             '<dd><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></dd>' +
