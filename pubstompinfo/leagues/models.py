@@ -1,5 +1,6 @@
 from .. import db, steam, fs_cache, sentry
 from ..dota.models import Schema
+from ..events.models import Event, EventDay
 import sys
 import datetime
 
@@ -44,6 +45,10 @@ class League(db.Model):
             self.image_url, self.image_url_large = League.fetch_images(self.itemdef)
 
         return self.image_url_large
+
+    @property
+    def future_events(self):
+        return self.events.filter(Event.days.any(EventDay.end_time > datetime.datetime.now()))
 
     @classmethod
     @fs_cache.cached(timeout=60 * 60, key_prefix="leagues")

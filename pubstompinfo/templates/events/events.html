@@ -4,6 +4,9 @@
 {% block content %}
     <section class="events">
         <h1>Events</h1>
+
+        <p>Results limited to in-progress and upcoming events.</p>
+
         <nav>
             <a class="button" href="{{ url_for('events.edit') }}">Register event</a>
         </nav>
@@ -14,6 +17,8 @@
                 <th>Name</th>
                 <th>League</th>
                 <th>City</th>
+                <th>Opening</th>
+                <th>Closing</th>
             </tr>
             </thead>
             <tbody>
@@ -22,6 +27,8 @@
                     <td><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></td>
                     <td>{{ event.league.name }}</td>
                     <td>{{ event.city }}</td>
+                    <td>{{ event.start_time }}</td>
+                    <td>{{ event.end_time }}</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from .. import mem_cache, sentry, db
 from models import Event, EventVenue, EventDay
 from forms import EventForm
-
+from datetime import datetime
 
 mod = Blueprint("events", __name__, url_prefix="/events")
 
@@ -11,7 +11,9 @@ mod = Blueprint("events", __name__, url_prefix="/events")
 @mod.route("/")
 @mod.route("/page/<int:page>/")
 def events(page=1):
-    _events = Event.query.paginate(page, current_app.config['EVENTS_PER_PAGE'])
+    _events = Event.query.\
+        filter(Event.days.any(EventDay.end_time > datetime.now())).\
+        paginate(page, current_app.config['EVENTS_PER_PAGE'])
 
     return render_template("events/events.html",
                            title="Events - {}".format(current_app.config['SITE_NAME']),

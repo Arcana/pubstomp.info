@@ -22,8 +22,8 @@
         </div>
         <div class="card-stats">
             <ul>
-                <li>{{ league.events|groupby(attribute="city")|list|length }}<span>Cities</span></li>
-                <li>{{ league.events.count() }} <span>Pubstomps</span></li>
+                <li>{{ league.future_events|groupby(attribute="city")|list|length }}<span>Cities</span></li>
+                <li>{{ league.future_events.count() }} <span>Pubstomps</span></li>
             </ul>
         </div>
     </div>
@@ -32,6 +32,8 @@
 {% block content %}
     <section class="leagues">
         <h1>Leagues</h1>
+
+        <p>Results limited to leagues with in-progress and upcoming events.</p>
 
         <div class="cards">
             {% for league in leagues.items %}

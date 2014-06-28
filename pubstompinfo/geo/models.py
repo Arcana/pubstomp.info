@@ -8,9 +8,8 @@ import os
 import csv
 from ..helpers import grouper
 from MySQLdb import escape_string
-from flask_sqlalchemy import Pagination
-from flask import abort
-from sqlalchemy import func
+from datetime import datetime
+from ..events.models import Event, EventDay
 
 
 class Geoname(db.Model):
@@ -80,6 +79,10 @@ class Geoname(db.Model):
         self.dem = dem
         self.timezone = timezone
         self.modification_date = modification_date
+
+    @property
+    def future_events(self):
+        return self.events.filter(Event.days.any(EventDay.end_time > datetime.now()))
 
     @classmethod
     def get_cities(cls):

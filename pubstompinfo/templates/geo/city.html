@@ -46,20 +46,27 @@
 
         {% if city.events.count() > 0 %}
             <h2>Events</h2>
+
+            <p>Results limited to in-progress and upcoming events.</p>
+
             <table>
                 <thead>
                 <tr>
                     <th>Name</th>
                     <th>League</th>
                     <th>City</th>
+                    <th>Opening</th>
+                    <th>Closing</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for event in city.events %}
+                {% for event in city.future_events %}
                     <tr>
                         <td><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></td>
                         <td>{{ event.league.name }}</td>
                         <td>{{ event.city }}</td>
+                        <td>{{ event.start_time }}</td>
+                        <td>{{ event.end_time }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

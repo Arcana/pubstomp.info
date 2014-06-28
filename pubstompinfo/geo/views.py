@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, current_app, abort, jsonify
 from models import Geoname
-from ..events.models import Event
+from ..events.models import Event, EventDay
 from .. import db
 
+from datetime import datetime
 import json
 
 mod = Blueprint("geo", __name__, url_prefix="/geo")
@@ -23,6 +24,7 @@ def countries(page=1):
 def cities(page=1):
     _cities = Geoname.get_cities(). \
         join(Event). \
+        filter(Event.days.any(EventDay.end_time > datetime.now())). \
         group_by(Geoname.geonameid). \
         order_by(db.func.count(Event.id).desc()
     ).paginate(page, current_app.config['CITIES_PER_PAGE'])

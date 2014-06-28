@@ -1,4 +1,5 @@
 from .. import db
+from sqlalchemy.ext.hybrid import hybrid_property
 import datetime
 
 
@@ -21,7 +22,7 @@ class Event(db.Model):
     website = db.Column(db.String(128))
 
     # Relationships
-    days = db.relationship('EventDay', backref='event', lazy="joined")
+    days = db.relationship('EventDay', backref='event', lazy="joined", order_by="EventDay.start_time")
     organisers = db.relationship('User', secondary=event_organisers, backref=db.backref('events', lazy="dynamic"),
                                  lazy="joined")
 
@@ -43,6 +44,20 @@ class Event(db.Model):
         :return: bool
         """
         return user in self.organisers or user.is_admin()
+
+    @hybrid_property
+    def start_time(self):
+        day = EventDay.query.filter(EventDay.event_id == self.id).order_by(EventDay.start_time.asc()).first()
+        if day:
+            return day.start_time
+        return None
+
+    @hybrid_property
+    def end_time(self):
+        day = EventDay.query.filter(EventDay.event_id == self.id).order_by(EventDay.end_time.desc()).first()
+        if day:
+            return day.end_time
+        return None
 
 
 class EventDay(db.Model):
