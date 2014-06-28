@@ -215,6 +215,7 @@ header.navigation {
     }
   }
 
+  a.user-logout,
   a.user-profile {
     margin-top: 13px;
     float: right;
@@ -227,6 +228,7 @@ header.navigation {
     font-weight: 800;
     text-transform: uppercase;
     padding: .4em .5em;
+    margin-left: 1em;
 
     @include media($large-screen) {
       padding: .4em 1em;

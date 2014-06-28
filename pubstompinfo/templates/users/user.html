@@ -11,4 +11,35 @@
             <dd>{{ user.last_seen|datetime_to_datestring }} UTC</dd>
         </dl>
     </section>
+
+    <section class="my-events">
+        <h2>{{ user.name }}'s events</h2>
+
+        {% if user.events.count() > 0 %}
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>League</th>
+                    <th>City</th>
+                    <th>Opening</th>
+                    <th>Closing</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for event in user.events %}
+                    <tr>
+                        <td><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></td>
+                        <td>{{ event.league.name }}</td>
+                        <td>{{ event.city }}</td>
+                        <td>{{ event.start_time }}</td>
+                        <td>{{ event.end_time }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <em>No events found</em>
+        {% endif %}
+    </section>
 {% endblock %}
