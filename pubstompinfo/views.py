@@ -2,6 +2,8 @@ from flask import render_template
 from . import app, db
 from flask.ext.login import current_user
 from events.models import Event, EventDay
+from geo.models import Geoname
+from leagues.models import League
 from datetime import datetime
 
 # Routes
@@ -13,9 +15,35 @@ def index():
     """
 
     events = Event.query.filter(Event.days.any(EventDay.end_time > datetime.now()))
+    new_events = events.order_by(Event.created_at).limit(8)
+
+    popular_leagues = League.query.join(Event).\
+        filter(Event.days.any(EventDay.end_time > datetime.now())).\
+        limit(4). \
+        all()
+
+    popular_cities = Geoname.get_cities(). \
+        join(Event). \
+        filter(
+            Event.days.any(EventDay.end_time > datetime.now())). \
+            group_by(Geoname.geonameid). \
+            order_by(db.func.count(Event.id).desc()
+        ). \
+        limit(8). \
+        all()
+
+    # Get counts for this page of cities (fuck knows how to include it with the above call ^)
+    city_counts = dict(db.session.query(Event.city_id, db.func.count(Event.id)).group_by(Event.city_id).filter(
+        Event.city_id.in_([city.geonameid for city in popular_cities])).all())
+
+    for item in popular_cities:
+        item.events_count = city_counts.get(item.geonameid) or 0
 
     return render_template("index.html",
-                           events=events)
+                           events=events,
+                           new_events=new_events,
+                           popular_cities=popular_cities,
+                           popular_leagues=popular_leagues)
 
 
 @app.errorhandler(401)  # Unauthorized

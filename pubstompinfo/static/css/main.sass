@@ -19,7 +19,7 @@
 // Sections
 section
   @include outer-container
-  @include padding(1em inherit)
+  @include padding(1em)
 
   &.advertisement
     border-top: $base-border-radius dashed $base-border-color
@@ -28,6 +28,13 @@ section
   &.league-page
     &> img
       float: right
+
+  @include breakpoint($medium-screen)
+    &.home-page
+      .popular-cities,
+      .new-events
+        @include span-columns(6)
+        @include omega(2)
 
 // Buttons
 a.button

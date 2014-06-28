@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% from "macros.html" import logo %}
+{% from "leagues/macros.html" import league_card %}
 
 {% block content %}
     <div class="hero">
@@ -20,9 +21,60 @@
         </div>
     </div>
 
-    <section>
-        <p>Copy copy copy copy</p>
-        <p>Copy copy copy copy</p>
+    <section class="popular-leagues">
+        <h2>Popular leagues</h2>
+
+        <div class="cards">
+            {% for league in popular_leagues %}
+                {{ league_card(league) }}
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="home-page">
+        <div class="new-events">
+            <h2>New events</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>League</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for new_event in new_events %}
+                    <tr>
+                        <td><a href="{{ url_for('events.event', _id=new_event.id) }}">{{ new_event.name }}</a></td>
+                        <td><a href="{{ url_for('geo.city', _id=new_event.city.geonameid) }}">{{ new_event.city }}</a></td>
+                        <td><a href="{{ url_for('leagues.league', _id=new_event.league.id) }}">{{ new_event.league.name }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="popular-cities">
+            <h2>Popular cities</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Events</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for popular_city in popular_cities %}
+                    <tr>
+                        <td><a href="{{ url_for('geo.city', _id=popular_city.geonameid) }}">{{ popular_city }}</a></td>
+                        <td>{{ popular_city.events_count }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </section>
 {% endblock %}
 
