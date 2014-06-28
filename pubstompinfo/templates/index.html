@@ -123,6 +123,10 @@
                         markers[{{ loop.index }}],
                         'click',
                         function(e){
+                            // Hide all other info windows
+                            for (var key in infowindows) {
+                                infowindows[key].close();
+                            }
                             infowindows[{{ loop.index }}].open(map, markers[{{ loop.index }}]);
                         }
                 );
