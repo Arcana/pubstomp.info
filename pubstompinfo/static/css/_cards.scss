@@ -97,6 +97,7 @@
     height: 200px;
     overflow-y: auto;
     overflow-x: none;
+    color: $base-font-color;
   }
 
   .card-stats {
@@ -139,6 +140,7 @@
 
     .card-image img {
       background: $card-image-hover-background;
+      @include filter(brightness(125%))
     }
 
     .card-header {
