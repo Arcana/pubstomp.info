@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from flask.ext.pagedown.fields import PageDownField
-from wtforms import TextField, IntegerField, FormField, FieldList, DateTimeField
+from wtforms import TextField, IntegerField, FormField, FieldList, DateTimeField, DecimalField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import Required, Length, URL, Optional, ValidationError
 from ..forms import AutocompleteField
@@ -23,6 +23,9 @@ class VenueForm(Form):
     address2 = TextField("Address 2", validators=[Optional(), Length(max=64)])
     zip_code = TextField("Zip Code", validators=[Optional(), Length(max=64)])
     capacity = IntegerField("Capacity", validators=[Optional()])
+
+    latitude = DecimalField("Latitude", places=8, validators=[Optional()])
+    longitude = DecimalField("Longitude", places=8, validators=[Optional()])
 
     def __init__(self, csrf_enabled=False, *args, **kwargs):
         super(VenueForm, self).__init__(csrf_enabled=csrf_enabled, *args, **kwargs)

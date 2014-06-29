@@ -133,8 +133,8 @@
                 markers[{{ loop.index }}] = new google.maps.Marker({
                     map: map,
                     position: {
-                        lat: {{ event.city.latitude }},
-                        lng: {{ event.city.longitude }}
+                        lat: {{ event.venue.latitude or event.city.latitude }},
+                        lng: {{ event.venue.longitude or event.city.longitude }}
                     },
                     title: "{{ event.name }}"
 

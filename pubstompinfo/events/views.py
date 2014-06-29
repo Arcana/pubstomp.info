@@ -64,6 +64,8 @@ def edit(_id=None):
         venue.address2 = event_form.venue.address2.data
         venue.zip_code = event_form.venue.zip_code.data
         venue.capacity = event_form.venue.capacity.data
+        venue.latitude = event_form.venue.latitude.data
+        venue.longitude = event_form.venue.longitude.data
 
         if venue.name:
             # Save the venue if it has a name

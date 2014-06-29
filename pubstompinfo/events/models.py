@@ -94,15 +94,21 @@ class EventVenue(db.Model):
 
     capacity = db.Column(db.Integer)
 
+    latitude = db.Column(db.Float(10, 6))
+    longitude = db.Column(db.Float(10, 6))
+
     concessions = None  # TODO
     facilities = None  # TODO
 
-    def __init__(self, event_id=None, name=None, address1=None, address2=None, kappacity=None):
+    def __init__(self, event_id=None, name=None, address1=None, address2=None, kappacity=None, latitude=None, longitude=None):
         self.event_id = event_id
         self.name = name
         self.address1 = address1
         self.address2 = address2
         self.capacity = kappacity
+        self.latitude = latitude
+        self.longitude = longitude
+
 
     @property
     def display_name(self):

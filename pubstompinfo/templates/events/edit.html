@@ -25,21 +25,6 @@
                 {{ render_field(form.description, rows=5) }}
             </fieldset>
 
-            <fieldset id="venue-details">
-                <h2>Venue details</h2>
-                <p>Feel free to enter "TBD" to the required fields if you aren't committed to a venue yet.</p>
-
-                <div class="two-col">
-                    {{ render_field(form.venue.display_name) }}
-                    {{ render_field(form.venue.capacity) }}
-
-                    {{ render_field(form.venue.address1) }}
-                    {{ render_field(form.venue.address2) }}
-                    {{ render_field(form.venue.zip_code) }}
-                </div>
-                <div><em>Other address data will be inferred from the <code>city</code> set above.</code></em></div>
-            </fieldset>
-
             <fieldset id="days">
                 <h2>Days</h2>
 
@@ -58,6 +43,34 @@
                 </div>
                 <div>
                     <button id="new-day">Add another day</button>
+                </div>
+            </fieldset>
+
+            <fieldset id="venue-details">
+                <h2>Venue details</h2>
+
+                <p>Feel free to enter "TBD" to the required fields if you aren't committed to a venue yet.</p>
+
+                <div class="two-col">
+                    {{ render_field(form.venue.display_name) }}
+                    {{ render_field(form.venue.capacity) }}
+
+                    {{ render_field(form.venue.address1) }}
+                    {{ render_field(form.venue.address2) }}
+
+                    {{ render_field(form.venue.zip_code) }}
+                </div>
+                <div><em>Other address data will be inferred from the <code>city</code> set above.</code></em></div>
+
+                <h3>Venue location:</h3>
+
+                <button id="latlong-picker-geocode">Center map to venue address given above</button>
+
+                <div id="latlong-picker" class="google-map"></div>
+
+                <div class="two-col">
+                    {{ render_field(form.venue.latitude) }}
+                    {{ render_field(form.venue.longitude) }}
                 </div>
             </fieldset>
 
@@ -126,5 +139,87 @@
                 }
             });
         });
+    </script>
+
+    <script type="text/javascript"
+            src="//maps.googleapis.com/maps/api/js?key={{ config['GMAPS_API_KEY'] }}">
+    </script>
+    <script type="text/javascript">
+        function initialize() {
+
+            var $lat_input = $('input[name="venue-latitude"]');
+            var $long_input = $('input[name="venue-longitude"]');
+
+            var mapOptions = {
+                zoom: parseFloat($lat_input.val()) ? 15 : 2,
+                center: {
+                    lat: parseFloat($lat_input.val()) || 40,
+                    lng: parseFloat($long_input.val()) || 0
+                },
+                streetViewControl: false
+            };
+            var map = new google.maps.Map(document.getElementById("latlong-picker"), mapOptions);
+            var geocoder = new google.maps.Geocoder();
+
+            var marker = new google.maps.Marker({
+                position: mapOptions.center,
+                map: map
+            });
+
+            google.maps.event.addListener(map, 'center_changed', function () {
+                // 0.1 seconds after the center of the map has changed,
+                // set back the marker position.
+                window.setTimeout(function () {
+                    var center = map.getCenter();
+                    marker.setPosition(center);
+
+                    $lat_input.val(center.lat());
+                    $long_input.val(center.lng());
+                }, 100);
+            });
+
+            $('button#latlong-picker-geocode').click(function (e) {
+                e.preventDefault();
+
+                var address = '',
+                    venue_name = $('input[name="venue-display_name"]').val(),
+                    venue_address1 = $('input[name="venue-address1"]').val(),
+                    venue_address2 = $('input[name="venue-address2"]').val(),
+                    venue_city = $('input[name="city_typeahead"]').val(),
+                    venue_zip = $('input[name="venue-zip_code"]').val();
+
+                address += venue_name;
+                if (venue_address1) address += ', ' + venue_address1;
+                if (venue_address2) address += ', ' + venue_address2;
+                if (venue_city) address += ', ' + venue_city;
+                if (venue_zip) address += ', ' + venue_zip;
+
+                geocoder.geocode({
+                    address: address,
+                }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(
+                                results[0].geometry.location
+                        );
+                        map.setZoom(15);
+                    }
+                    else {
+                        alert("Cannot find venue address, " + status);
+                    }
+                });
+
+            });
+
+            function recenter_map_from_inputs(e) {
+                map.setCenter({
+                    lat: parseFloat($lat_input.val()),
+                    lng: parseFloat($long_input.val())
+                })
+            }
+
+            $lat_input.change(recenter_map_from_inputs);
+            $long_input.change(recenter_map_from_inputs);
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 {% endblock %}
