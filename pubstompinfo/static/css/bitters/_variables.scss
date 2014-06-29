@@ -30,6 +30,7 @@ $deep-green: #37864D;
 $international-2012: #507DFE;
 $international-2013: #15A515;
 $earth-green: #5AC355;
+$summer-warmth: #FFEEBC;
 
 // Body Color
 $base-body-color: darken($dark-gray, 10);
@@ -49,9 +50,9 @@ $hover-link-color: lighten($base-accent-color, 15);
 $base-border-color: $dark-gray;
 
 // Flash Colors
-$error-color: $light-red;
-$notice-color: $light-yellow;
-$success-color: $light-green;
+$error-color: desaturate($red, 15%);
+$notice-color: desaturate(darken($summer-warmth, 25%), 40%);
+$success-color: $deep-green;
 
 // Forms
 $form-border-color: $base-border-color;

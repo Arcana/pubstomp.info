@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, flash
 from . import app, db
 from flask.ext.login import current_user
 from events.models import Event, EventDay
@@ -44,6 +44,15 @@ def index():
                            new_events=new_events,
                            popular_cities=popular_cities,
                            popular_leagues=popular_leagues)
+
+
+@app.route('/flash')
+def _flash():
+    flash("Abcdefghijklmnopqrstuvwxyz", "error")
+    flash("Abcdefghijklmnopqrstuvwxyz", "notice")
+    flash("Abcdefghijklmnopqrstuvwxyz", "success")
+
+    return render_template("error.html", error=None)
 
 
 @app.errorhandler(401)  # Unauthorized

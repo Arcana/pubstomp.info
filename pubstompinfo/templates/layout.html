@@ -20,9 +20,11 @@
 <main>
     {% for category, message in get_flashed_messages(with_categories=true) %}
         <!-- TODO -->
-        <div class="flash alert {{ "alert-" + category if category != "message" else "warning" }}">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
+        <div class="flash {{ category if category else "notice" }}">
+            <span>
+                {{ message }}
+                <a class="close">&times;</a>
+            </span>
         </div>
     {% endfor %}
 
@@ -82,6 +84,7 @@
         <script src="{{ url_for('static', filename='bower/jquery/dist/jquery.min.js') }}?{{ config['VERSION'] }}"></script>
     {% endif %}
     <script src="{{ url_for('static', filename='js/_nav.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/_flash.js') }}"></script>
     {{ config['GA_TRACKING_SNIPPET']|safe }}
 
     {{ pagedown.include_pagedown() }}

@@ -111,9 +111,9 @@ def create_or_login(resp):
     if login_attempt is True:
         flash(u"You are logged in as {}".format(_user.name), "success")
     elif not _user.is_active():
-        flash(u"Cannot log you in as {}, your account has been disabled.  If you believe this is in error, please contact {}.".format(_user.name, current_app.config["CONTACT_EMAIL"]), "danger")
+        flash(u"Cannot log you in as {}, your account has been disabled.  If you believe this is in error, please contact {}.".format(_user.name, current_app.config["CONTACT_EMAIL"]), "error")
     else:
-        flash(u"Error logging you in as {}, please try again later.".format(_user.name), "danger")
+        flash(u"Error logging you in as {}, please try again later.".format(_user.name), "error")
 
     # Rediect the user to their next-url.
     return redirect(oid.get_next_url())
@@ -141,7 +141,7 @@ def users(page=1):
 
     # If the user is not an admin, make them go away.
     if not current_user.is_admin():
-        flash("User list is admin only atm.", "danger")
+        flash("User list is admin only atm.", "error")
         return redirect(request.referrer or url_for("index"))
 
     # Get paginated list of users
@@ -167,7 +167,7 @@ def user(_id):
 
     # If the user doesn't exist flash "User not found" and return the user to their referrer or the site's index.
     if _user is None:
-        flash("User {} not found.".format(_id), "danger")
+        flash("User {} not found.".format(_id), "error")
         return redirect(request.referrer or url_for("index"))
 
     # Render user profile
@@ -190,7 +190,7 @@ def update_name(_id):
 
     # If not an admin, yell at the visitor and redirect them away.
     if not current_user.is_admin():
-        flash("Only admins can force-update user names.", "danger")
+        flash("Only admins can force-update user names.", "error")
         return redirect(request.referrer or url_for("index"))
 
     # Get the user object for the given user id.
@@ -198,7 +198,7 @@ def update_name(_id):
 
     # If the user doesn't exist, yell at the visitor and redirect them away.
     if _user is None:
-        flash("User {} not found.".format(_id), "danger")
+        flash("User {} not found.".format(_id), "error")
         return redirect(request.referrer or url_for("index"))
 
     # Keep a record of old name and new name, to log.
@@ -235,13 +235,13 @@ def settings(_id):
 
     # Check the visitor is the user whose settings we're trying to poke, or an admin.
     if current_user.id != _id and not current_user.is_admin():
-        flash("You are not authorised to edit user {}'s settings.".format(_id), "danger")
+        flash("You are not authorised to edit user {}'s settings.".format(_id), "error")
         return redirect(request.referrer or url_for("index"))
 
     # Get the user object for the given user ID.
     _user = User.query.filter(User.id == _id).first()
     if _user is None:
-        flash("User {} not found.".format(_id), "danger")
+        flash("User {} not found.".format(_id), "error")
         return redirect(request.referrer or url_for("index"))
 
     # Get settings form! Woop!
