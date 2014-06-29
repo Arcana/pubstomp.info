@@ -25,6 +25,10 @@ def event(_id):
     _event = Event.query.filter(Event.id == _id).first_or_404()
     return render_template("events/event.html",
                            title="{} - {}".format(_event.name, current_app.config['SITE_NAME']),
+                           meta_description="A pubstomp for {} being held in {}. {}".format(
+                               _event.league.name,
+                               _event.city,
+                               _event.short_description),
                            event=_event)
 
 

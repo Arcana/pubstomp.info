@@ -47,4 +47,5 @@ def league(_id):
     _league = League.query.filter(League.id == _id).first_or_404()
     return render_template("leagues/league.html",
                            title="{} - {}".format(_league.name, current_app.config['SITE_NAME']),
+                           meta_description=u"Dota 2 pubstomps for {} across the world.".format(_league.name),
                            league=_league)

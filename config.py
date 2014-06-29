@@ -24,7 +24,7 @@ UPDATE_USER_NAME_TIMEOUT = 60 * 60  # 1 hour
 
 # General vars
 SITE_NAME = "Pubstomp.info"
-SITE_DESCRIPTION = "A directory for Dota 2 pubstomps across the world, for a variety of leagues."
+SITE_DESCRIPTION = "A directory for Dota 2 pubstomps across the world."
 GITHUB_URL = "http://github.com/Arcana/pubstomp.info"
 ISSUE_TRACKER_URL = "http://github.com/Arcana/pubstomp.info/issues"
 CONTACT_EMAIL = "gief@arcana.io"
@@ -34,6 +34,7 @@ LEAGUES_PER_PAGE = 12
 COUNTRIES_PER_PAGE = 64
 CITIES_PER_PAGE = 64
 EVENTS_PER_PAGE = 12
+SHORT_DESCRIPTION_LENGTH = 140
 
 # Geodata
 GEODATA_COUNTRIES = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ',

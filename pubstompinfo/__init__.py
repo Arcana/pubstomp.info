@@ -9,6 +9,7 @@ from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.pagedown import PageDown
+from flask.ext.markdown import Markdown
 from raven.contrib.flask import Sentry
 import steam
 import os
@@ -31,6 +32,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 oid = OpenID(app)
 pagedown = PageDown(app)
+markdown = Markdown(app)
 
 sentry = Sentry(app)
 

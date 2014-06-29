@@ -9,9 +9,9 @@
           content="{{ meta_description or config['SITE_DESCRIPTION'] }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    {%- block style %}
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}?{{ config['VERSION'] }}"
-    {%- endblock style %}
+    {% block style %}
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}?{{ config['VERSION'] }}"/>
+    {% endblock style %}
 </head>
 
 <body>
@@ -19,7 +19,6 @@
 
 <main>
     {% for category, message in get_flashed_messages(with_categories=true) %}
-        <!-- TODO -->
         <div class="flash {{ category if category else "notice" }}">
             <span>
                 {{ message }}
@@ -30,6 +29,7 @@
 
     {% block content %}
     {% endblock %}
+
     <section id="ad_large_bottom" class="advertisement">
         {% if current_user.allows_ads() %}
             <a href="#ad_large_bottom">
@@ -86,9 +86,6 @@
     <script src="{{ url_for('static', filename='js/_nav.js') }}"></script>
     <script src="{{ url_for('static', filename='js/_flash.js') }}"></script>
     {{ config['GA_TRACKING_SNIPPET']|safe }}
-
-    {{ pagedown.include_pagedown() }}
-    <script src="{{ url_for('static', filename='js/_markdown.js') }}"></script>
 {% endblock %}
 </body>
 </html>

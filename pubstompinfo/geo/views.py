@@ -47,6 +47,7 @@ def city(_id):
 
     return render_template("geo/city.html",
                            title=u"{} - {}".format(_city.name, current_app.config['SITE_NAME']),
+                           meta_description=u"Dota 2 pubstomps happening in {}".format(_city),
                            city=_city)
 
 

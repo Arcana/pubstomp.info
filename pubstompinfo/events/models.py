@@ -1,7 +1,7 @@
-from .. import db
+from .. import db, app, markdown
 from sqlalchemy.ext.hybrid import hybrid_property
+from jinja2.filters import do_striptags as strip_tags
 import datetime
-
 
 event_organisers = db.Table("event_organiser",
                             db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
@@ -58,6 +58,13 @@ class Event(db.Model):
         if day:
             return day.end_time
         return None
+
+    @property
+    def short_description(self):
+        short_desc = strip_tags(markdown(self.description))  # Replace this when hypermark is released - then just hypermark.text :)
+        if len(short_desc) > app.config['SHORT_DESCRIPTION_LENGTH']:
+            short_desc = short_desc[:app.config['SHORT_DESCRIPTION_LENGTH']] + "..."
+        return short_desc
 
 
 class EventDay(db.Model):
