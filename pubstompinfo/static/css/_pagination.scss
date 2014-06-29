@@ -51,6 +51,7 @@
   }
   .meta {
     display: inline;
+    float: right;
     color: darken($pagination-color, 25%);
   }
 }
