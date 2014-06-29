@@ -58,6 +58,18 @@ section
         @include span-columns(6)
         @include omega(2)
 
+  @include breakpoint($large-screen)
+    &.about-us
+      .about-pubstomp,
+      .about-arcana
+        @include span-columns(6)
+        @include omega(2)
+
+      .about-arcana
+        table
+          th
+            width: 110px
+
 // Buttons
 a.button
   @include button(simple, $base-accent-color)

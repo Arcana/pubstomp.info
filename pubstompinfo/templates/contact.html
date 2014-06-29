@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <section class="page-header">
+        <h1>Contact us</h1>
+    </section>
+    <section class="contact-us">
+        <p>You can contact the team via e-mail at: <strong><a
+                href="mailto:{{ config['CONTACT_EMAIL']|escape_every_character|safe }}">{{ config['CONTACT_EMAIL']|escape_every_character|safe }}</a></strong>
+        </p>
+
+        <p>Or you can stalk us individually:</p>
+
+
+        <table class="get-stalked">
+            <tbody>
+            <tr>
+                <th>Rob Jackson</th>
+                <td><a href="https://github.com/RJacksonm1">GitHub</a></td>
+                <td><a href="https://keybase.io/rjackson">KeyBase</a></td>
+                <td><a href="http://www.reddit.com/user/RJacksonm1">Reddit</a></td>
+                <td><a href="https://twitter.com/rjacksonm1">Twitter</a></td>
+                <td><a href="https://rjackson.me/">Website</a></td>
+            </tr>
+            <tr>
+                <th>Bence Nagy</th>
+                <td><a href="https://github.com/Underyx">GitHub</a></td>
+                <td><a href="https://keybase.io/underyx">KeyBase</a></td>
+                <td><a href="http://www.reddit.com/user/underyx">Reddit</a></td>
+                <td><a href="https://twitter.com/underyx">Twitter</a></td>
+                <td><a href="http://underyx.me/">Website</a></td>
+            </tr>
+            <tr>
+                <th>Ben Williams</th>
+                <td><a href="https://github.com/Smashman">GitHub</a></td>
+                <td><a href="https://keybase.io/smashman">KeyBase</a></td>
+                <td><a href="http://www.reddit.com/user/smashman2004">Reddit</a></td>
+                <td><a href="https://twitter.com/smashman2004">Twitter</a></td>
+                <td><a href="http://smash.mn/">Website</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

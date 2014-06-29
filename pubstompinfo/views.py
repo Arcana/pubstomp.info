@@ -6,6 +6,7 @@ from geo.models import Geoname
 from leagues.models import League
 from datetime import datetime
 
+
 # Routes
 @app.route('/')
 def index():
@@ -44,6 +45,18 @@ def index():
                            new_events=new_events,
                            popular_cities=popular_cities,
                            popular_leagues=popular_leagues)
+
+
+@app.route('/about')
+def about():
+    return render_template("about.html",
+                           title="About us")
+
+
+@app.route('/contact')
+def contact():
+    return render_template("contact.html",
+                           title="Contact us")
 
 
 @app.route('/flash')

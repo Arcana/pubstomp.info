@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <section class="page-header">
+        <h1>About us</h1>
+    </section>
+    <section class="about-us">
+        <div class="about-pubstomp">
+            <h2>Pubstomp.info</h2>
+
+            <p>Pubstomp.info was created with two primary goals in mind: Make it easier for pubstomp organisers and
+                pubstomp attendees to find out about eachother; and promote Dota 2 pubstomps in general year-round (i.e.
+                not just focused on The International). The site is basically a directory of pubstomps which would-be
+                attendees can browse to find events in their area; however we try to be distinct by making it super-easy
+                to find events, and we try to ask event organisers all the right questions so attendees know exactly
+                what to expect when they turn up at an event.</p>
+
+            <p>The website is certainly not finished &ndash; we've got a lot of things on our TODO list, but it's
+                functional and we think in a good-enough state for people to start using. The website is also completely
+                open-source (<a href="{{ config['GITHUB_URL'] }}">code on GitHub</a>), so if you want to contribute
+                you're more than welcome to.</p>
+
+            <p>If you have any questions for the Pubstomp.info team, or if you have any feedback for us, feel free to
+                e-mail us at <a href="mailto:{{ config['CONTACT_EMAIL']|escape_every_character|safe }}">
+                    {{ config['CONTACT_EMAIL']|escape_every_character|safe }}</a>.
+            </p>
+        </div>
+
+        <div class="about-arcana">
+            <h2>Arcana.io</h2>
+
+            <p>We are a small group of developers who like to build products and tools to help the communities around
+                various Valve products. We've each been involved with Valve's products and their associated communities
+                for many years, finding ways to contribute however we can. Arcana.io is our attempt at coalescing
+                our skills to build some high-quality services for those communities (let us know how we're doing!).
+                You can see some of our other projects on the footer below.</p>
+
+            <p>If you're into stalking people, here's Christmas:</p>
+
+            <table class="get-stalked">
+                <tbody>
+                <tr>
+                    <th>Rob Jackson</th>
+                    <td><a href="https://github.com/RJacksonm1">GitHub</a></td>
+                    <td><a href="https://keybase.io/rjackson">KeyBase</a></td>
+                    <td><a href="http://www.reddit.com/user/RJacksonm1">Reddit</a></td>
+                    <td><a href="https://twitter.com/rjacksonm1">Twitter</a></td>
+                    <td><a href="https://rjackson.me/">Website</a></td>
+                </tr>
+                <tr>
+                    <th>Bence Nagy</th>
+                    <td><a href="https://github.com/Underyx">GitHub</a></td>
+                    <td><a href="https://keybase.io/underyx">KeyBase</a></td>
+                    <td><a href="http://www.reddit.com/user/underyx">Reddit</a></td>
+                    <td><a href="https://twitter.com/underyx">Twitter</a></td>
+                    <td><a href="http://underyx.me/">Website</a></td>
+                </tr>
+                <tr>
+                    <th>Ben Williams</th>
+                    <td><a href="https://github.com/Smashman">GitHub</a></td>
+                    <td><a href="https://keybase.io/smashman">KeyBase</a></td>
+                    <td><a href="http://www.reddit.com/user/smashman2004">Reddit</a></td>
+                    <td><a href="https://twitter.com/smashman2004">Twitter</a></td>
+                    <td><a href="http://smash.mn/">Website</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

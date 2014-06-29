@@ -47,8 +47,8 @@
     <div class="footer-links">
         <ul>
             <li><h3>{{ config['SITE_NAME'] }}</h3></li>
-            <li><a href="TODO">About</a></li>
-            <li><a href="TODO">Contact us</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact us</a></li>
             <li><a href="{{ config['GITHUB_URL'] }}">Contribute via GitHub</a></li>
             <li><a href="{{ config['ISSUE_TRACKER_URL'] }}">Report a problem</a></li>
         </ul>
