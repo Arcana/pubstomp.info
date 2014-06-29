@@ -1,27 +1,24 @@
 {% macro league_card(league) %}
-    <div class="card">
+    <a href="{{ url_for('leagues.league', _id=league.id) }}" class="card">
         <!--
         <div class="ribbon-wrapper">
             <div class="ribbon">RIBBON</div>
         </div>
         -->
         <div class="card-image">
-            <a href="{{ url_for('leagues.league', _id=league.id) }}">
                 <img src="{{ league.icon }}"
                      alt="{{ league.name }}">
-            </a>
         </div>
-        <div class="card-header">
-            <a href="{{ url_for('leagues.league', _id=league.id) }}">{{ league.name }}</a>
-        </div>
+        <div class="card-header">{{ league.name }}</div>
         <div class="card-copy">
             {{ league.description }}
         </div>
         <div class="card-stats">
             <ul>
-                <li>{{ league.future_events|groupby(attribute="city")|list|length }}<span>Cities</span></li>
                 <li>{{ league.future_events.count() }} <span>Pubstomps</span></li>
+                <li>{{ league.future_events|groupby(attribute="city")|list|length }}<span>Cities</span></li>
             </ul>
         </div>
-    </div>
+
+    </a>
 {% endmacro %}

@@ -100,24 +100,28 @@
   }
 
   .card-stats {
+    @include outer-container();
     padding: $base-line-height/2 $gutter/2;
     overflow: auto;
 
     ul li {
+      @include span-columns(6);
+      @include omega(2);
       display: inline;
       color: $card-stats-color;
       font-weight: 800;
       font-size: 1.2em;
-      float: left;
       border-right: 1px solid transparentize($base-font-color, .8);
       line-height: 1.1em;
       padding: 0 .7em 0 .7em;
+      margin-top: .35em;
+      text-align: center;
 
       &:first-child {
         padding-left: 0;
       }
 
-      &:last-child {
+      &:nth-of-type(even) {
         border-right: 0;
       }
 
