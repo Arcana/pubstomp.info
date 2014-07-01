@@ -105,7 +105,7 @@ def create_or_login(resp):
         db.session.commit()
 
     # Attempt to log the user in
-    login_attempt = login_user(_user)
+    login_attempt = login_user(_user, remember=True)
 
     # Flash messages according to how that went
     if login_attempt is True:

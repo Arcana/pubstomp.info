@@ -25,8 +25,8 @@ for all sorts of leagues.
 * `vim alembic.ini`
 * `cp newrelic.ini_example newrelic.ini`
 * `vim newrelic.ini` (Optional, can just leave it as default)
-* `./build.sh`
-* `python manage.py runserver`
+* `cd ..`
+* `./build_and_run.sh`
 
 Easy life.
 

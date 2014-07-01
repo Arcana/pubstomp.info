@@ -10,3 +10,4 @@ pubstompinfo/static/css/*.css
 newrelic.ini
 instance/*
 alembic.ini
+.cache/

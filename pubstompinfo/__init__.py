@@ -32,7 +32,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 oid = OpenID(app)
 pagedown = PageDown(app)
-markdown = Markdown(app)
+markdown = Markdown(app, safe_mode='escape')
 
 sentry = Sentry(app)
 
