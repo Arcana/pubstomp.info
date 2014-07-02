@@ -1,7 +1,4 @@
 #!/bin/bash
-source pubstomp-info/bin/activate
-pip install -r requirements.txt
-bower install
-sass --no-cache --update --style compressed pubstompinfo/static/css/
-alembic upgrade head
+source bin/activate
+./build.sh
 python manage.py runserver
