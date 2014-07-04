@@ -126,10 +126,13 @@
                 zoom: 2,
                 center: {lat: 40, lng: 0}  // Doesn't work without a center ;(
             };
+
+            // Create map
             var map = new google.maps.Map(document.getElementById("pubstomp-map"), mapOptions);
+
+            // Event markers
             var markers = {},
                 infowindows = {};
-
             {% for event in events %}
                 markers[{{ loop.index }}] = new google.maps.Marker({
                     map: map,
@@ -155,7 +158,6 @@
                             '<a class="button" href="{{ url_for("events.event", _id=event.id) }}">View event</a>'
                 });
 
-
                 google.maps.event.addListener(
                         markers[{{ loop.index }}],
                         'click',
@@ -168,6 +170,22 @@
                         }
                 );
             {% endfor %}
+
+            // Auto-zoom map to fit markers/
+            // Credit to Google's Polymer-project
+            // https://github.com/PolymerLabs/google-map/blob/master/google-map.html#L536
+
+            var latLngBounds = new google.maps.LatLngBounds();
+            for (var i = 0, m; m = markers[i]; ++i) {
+                latLngBounds.extend(new google.maps.LatLng(m.latitude, m.longitude));
+            }
+
+            // For one marker, don't alter zoom, just center it.
+            if (markers.length > 1) {
+                map.fitBounds(latLngBounds);
+            }
+
+            map.setCenter(latLngBounds.getCenter());
         }
         google.maps.event.addDomListener(window, 'load', initialize);
     </script>
