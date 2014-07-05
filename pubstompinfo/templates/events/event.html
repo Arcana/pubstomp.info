@@ -2,74 +2,157 @@
 
 {% block content %}
     <section class="event-page">
-        <h1>{{ event.name }}</h1>
-        <nav>
+        <header>
+            <h1>{{ event.name }}</h1>
             {% if event.can_edit(current_user) %}
                 <a class="button" href="{{ url_for('events.edit', _id=event.id) }}">Edit event</a>
             {% endif %}
-        </nav>
+        </header>
 
-        <div>{{ event.description|markdown }}</div>
-
-        <dl>
-            <dt>League</dt>
-            <dd>{{ event.league.name }}</dd>
-
-            <dt>City</dt>
-            <dd>{{ event.city }}</dd>
-
-            <dt>Website</dt>
-            <dd>{% if event.website %}<a href="{{ event.website }}">{{ event.website }}</a>{% else %} - {% endif %}</dd>
-        </dl>
-
-        <h2>Organisers</h2>
-        <ul>
-            {% for organiser in event.organisers %}
-                <li><a href="{{ url_for("users.user", _id=organiser.id) }}">{{ organiser }}</a></li>
-            {% endfor %}
-        </ul>
-
-        {% if event.venue %}
-            <h2>Venue</h2>
+        <article class="event-details">
 
             <dl>
-                <dt>Name</dt>
-                <dd>{{ event.venue.name or "-" }}</dd>
-                <dt>Capacity</dt>
-                <dd>{{ event.venue.capacity or "-" }}</dd>
-                <dt>Address 1</dt>
-                <dd>{{ event.venue.address1 or "-" }}</dd>
-                <dt>Address 2</dt>
-                <dd>{{ event.venue.address2 or "-" }}</dd>
+                <dt>League</dt>
+                <dd>{{ event.league.name }}</dd>
+
                 <dt>City</dt>
-                <dd>{{ event.city.name or "-" }}</dd>
-                <dt>Country</dt>
-                <dd>{{ event.city.country_code or "-" }}</dd>
-                <dt>Zip code</dt>
-                <dd>{{ event.venue.zip_code or "-" }}</dd>
+                <dd>{{ event.city }}</dd>
+
+                <dt>Website</dt>
+                <dd>{% if event.website %}<a href="{{ event.website }}">{{ event.website }}</a>{% else %} - {% endif %}
+                </dd>
             </dl>
-        {% endif %}
 
-        {% if event.days|length > 0 %}
-            <h2>Days</h2>
+            {% if event.days|length > 0 %}
+                <!-- TODO: Compact this down into a nice thin visual display of days, perhaps calendar style -->
+                <h2>Days</h2>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>Opening time</th>
-                    <th>Closing time</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for day in event.days %}
+                <table>
+                    <thead>
                     <tr>
-                        <td>{{ day.start_time }}</td>
-                        <td>{{ day.end_time }}</td>
+                        <th>Opening time</th>
+                        <th>Closing time</th>
                     </tr>
+                    </thead>
+                    <tbody>
+                    {% for day in event.days %}
+                        <tr>
+                            <td>{{ day.start_time }}</td>
+                            <td>{{ day.end_time }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+            <div class="description">{{ event.description|markdown }}</div>
+
+            <h2>Organisers</h2>
+            <ul>
+                {% for organiser in event.organisers %}
+                    <li><a href="{{ url_for("users.user", _id=organiser.id) }}">{{ organiser }}</a></li>
                 {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+            </ul>
+
+        </article>
+
+        <aside class="event-sidebar">
+
+            <section class="venue-detils">
+                <h3>Venue</h3>
+
+                {% if event.venue %}
+                    <dl>
+                        <dt>Name</dt>
+                        <dd>{{ event.venue.name or "-" }}</dd>
+                        <dt>Capacity</dt>
+                        <dd>{{ event.venue.capacity or "-" }}</dd>
+                        <dd>&nbsp;</dd>
+                        <dt>Address 1</dt>
+                        <dd>{{ event.venue.address1 or "-" }}</dd>
+                        <dt>Address 2</dt>
+                        <dd>{{ event.venue.address2 or "-" }}</dd>
+                        <dt>City</dt>
+                        <dd>{{ event.city.name or "-" }}</dd>
+                        <dt>Country</dt>
+                        <dd>{{ event.city.country_code or "-" }}</dd>
+                        <dt>Zip code</dt>
+                        <dd>{{ event.venue.zip_code or "-" }}</dd>
+                    </dl>
+                {% else %}
+                    <p>No venue information.</p>
+                {% endif %}
+
+                <div id="venue-map" class="google-map"></div>
+
+            </section>
+
+            <section class="league-details">
+                <h3>{{ event.league.name }}</h3>
+
+                <p>{{ event.league.description }}</p>
+
+                <a class="button" href="{{ url_for('leagues.league', _id=event.league.id) }}">View other Pubstomps</a>
+            </section>
+        </aside>
 
     </section>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript"
+            src="//maps.googleapis.com/maps/api/js?key={{ config['GMAPS_API_KEY'] }}">
+    </script>
+    <script type="text/javascript">
+        function initialize() {
+            var mapOptions = {
+                zoom: 15,
+                center: {
+                    lat: {{ event.venue.latitude or event.city.latitude }},
+                    lng: {{ event.venue.longitude or event.city.longitude }}
+                }
+            };
+
+            // Create map
+            var map = new google.maps.Map(document.getElementById("venue-map"), mapOptions);
+
+            // Event markers
+            var marker,
+                infowindow;
+
+            marker = new google.maps.Marker({
+                map: map,
+                position: {
+                    lat: {{ event.venue.latitude or event.city.latitude }},
+                    lng: {{ event.venue.longitude or event.city.longitude }}
+                },
+                title: "{{ event.name }}"
+
+            });
+
+            infowindow = new google.maps.InfoWindow({
+                content: '<div>' +
+                        '<dl>' +
+                        '<dt>Event name</dt>' +
+                        '<dd><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></dd>' +
+                        '<dt>City</dt>' +
+                        '<dd><a href="{{ url_for('geo.city', _id=event.city.geonameid) }}">{{ event.city }}</a></dd>' +
+                        '<dt>League</dt>' +
+                        '<dd><a href="{{ url_for('leagues.league', _id=event.league.id) }}">{{ event.league.name }}</a></dd>' +
+                        '</dl>' +
+                        '</div>' +
+                        '<a class="button" href="{{ url_for("events.event", _id=event.id) }}">View event</a>'
+            });
+
+            google.maps.event.addListener(
+                    marker,
+                    'click',
+                    function(e){
+                        infowindow.open(map, marker);
+                    }
+            );
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 {% endblock %}
