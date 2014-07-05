@@ -105,12 +105,30 @@
             src="//maps.googleapis.com/maps/api/js?key={{ config['GMAPS_API_KEY'] }}">
     </script>
     <script type="text/javascript">
+        {# Make sure to escape appropriately, else pretty beefy XSS opportunities. #}
+        var this_event = {
+            "id": {{ event.id|int }},
+            "name": "{{ event.name|replace('"', '\\"') }}",
+            "link": "{{ url_for("events.event", _id=event.id) }}",
+
+            "lat": {{ event.venue.latitude|float or event.city.latitude|float }},
+            "long": {{ event.venue.longitude|float or event.city.longitude|float }},
+
+            "city": "{{ event.city|replace('"', '\\"') }}",
+            "city_id": {{ event.city.geonameid|int }},
+            "city_link": "{{ url_for('geo.city', _id=event.city.geonameid) }}",
+
+            "league": "{{ event.league.name|replace('"', '\\"') }}",
+            "league_id": {{ event.league.id|int }},
+            "league.link": "{{ url_for('leagues.league', _id=event.league.id) }}"
+        };
+
         function initialize() {
             var mapOptions = {
                 zoom: 15,
                 center: {
-                    lat: {{ event.venue.latitude or event.city.latitude }},
-                    lng: {{ event.venue.longitude or event.city.longitude }}
+                    lat: this_event.lat,
+                    lng: this_event.long
                 }
             };
 
@@ -124,25 +142,25 @@
             marker = new google.maps.Marker({
                 map: map,
                 position: {
-                    lat: {{ event.venue.latitude or event.city.latitude }},
-                    lng: {{ event.venue.longitude or event.city.longitude }}
+                    lat: this_event.lat,
+                    lng: this_event.long
                 },
-                title: "{{ event.name }}"
+                title: this_event.name
 
             });
 
             infowindow = new google.maps.InfoWindow({
                 content: '<div>' +
-                        '<dl>' +
-                        '<dt>Event name</dt>' +
-                        '<dd><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></dd>' +
-                        '<dt>City</dt>' +
-                        '<dd><a href="{{ url_for('geo.city', _id=event.city.geonameid) }}">{{ event.city }}</a></dd>' +
-                        '<dt>League</dt>' +
-                        '<dd><a href="{{ url_for('leagues.league', _id=event.league.id) }}">{{ event.league.name }}</a></dd>' +
-                        '</dl>' +
-                        '</div>' +
-                        '<a class="button" href="{{ url_for("events.event", _id=event.id) }}">View event</a>'
+                    '<dl>' +
+                    '<dt>Event name</dt>' +
+                    '<dd><a href="' + this_event.link + '">' + this_event.name + '</a></dd>' +
+                    '<dt>City</dt>' +
+                    '<dd><a href="' + this_event.city_link + '">' + this_event.city + '</a></dd>' +
+                    '<dt>League</dt>' +
+                    '<dd><a href="' + this_event.league_link + '">' + this_event.league + '</a></dd>' +
+                    '</dl>' +
+                    '</div>' +
+                    '<a class="button" href="' + this_event.link + '">View event</a>'
             });
 
             google.maps.event.addListener(

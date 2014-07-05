@@ -121,6 +121,10 @@
             src="//maps.googleapis.com/maps/api/js?key={{ config['GMAPS_API_KEY'] }}">
     </script>
     <script type="text/javascript">
+        var map,
+            markers = [],
+            infowindows = [];
+
         function initialize() {
             var mapOptions = {
                 zoom: 2,
@@ -128,56 +132,88 @@
             };
 
             // Create map
-            var map = new google.maps.Map(document.getElementById("pubstomp-map"), mapOptions);
+            map = new google.maps.Map(document.getElementById("pubstomp-map"), mapOptions);
 
-            // Event markers
-            var markers = {},
-                infowindows = {};
-            {% for event in events %}
-                markers[{{ loop.index }}] = new google.maps.Marker({
+            // Event markers,
+            var data = [
+                    {% for event in events %}
+                        {# Make sure to escape appropriately, else pretty beefy XSS opportunities. #}
+                        {
+                            "id": {{ event.id|int }},
+                            "name": "{{ event.name|replace('"', '\\"') }}",
+                            "link": "{{ url_for("events.event", _id=event.id) }}",
+
+                            "lat": {{ event.venue.latitude|float or event.city.latitude|float }},
+                            "long": {{ event.venue.longitude|float or event.city.longitude|float }},
+
+                            "city": "{{ event.city|replace('"', '\\"') }}",
+                            "city_id": {{ event.city.geonameid|int }},
+                            "city_link": "{{ url_for('geo.city', _id=event.city.geonameid) }}",
+
+                            "league": "{{ event.league.name|replace('"', '\\"') }}",
+                            "league_id": {{ event.league.id|int }},
+                            "league.link": "{{ url_for('leagues.league', _id=event.league.id) }}"
+                        },
+                    {% endfor %}
+                ]; // TODO: Fetch data over AJAX, otherwise a BOATLOAD of xss potential.
+
+            for (var i = 0; i < data.length; i++)
+            {
+                createMarker(data[i]);
+            }
+
+            fitToMarkers();
+        }
+
+        function createMarker(event)
+        {
+            var marker = new google.maps.Marker({
                     map: map,
+                    title: event.name,
                     position: {
-                        lat: {{ event.venue.latitude or event.city.latitude }},
-                        lng: {{ event.venue.longitude or event.city.longitude }}
-                    },
-                    title: "{{ event.name }}"
-
+                        lat: event.lat,
+                        lng: event.long
+                    }
                 });
 
-                infowindows[{{ loop.index }}] = new google.maps.InfoWindow({
+            marker.infowindow = new google.maps.InfoWindow({
                     content: '<div>' +
-                            '<dl>' +
-                            '<dt>Event name</dt>' +
-                            '<dd><a href="{{ url_for("events.event", _id=event.id) }}">{{ event.name }}</a></dd>' +
-                            '<dt>City</dt>' +
-                            '<dd><a href="{{ url_for('geo.city', _id=event.city.geonameid) }}">{{ event.city }}</a></dd>' +
-                            '<dt>League</dt>' +
-                            '<dd><a href="{{ url_for('leagues.league', _id=event.league.id) }}">{{ event.league.name }}</a></dd>' +
-                            '</dl>' +
-                            '</div>' +
-                            '<a class="button" href="{{ url_for("events.event", _id=event.id) }}">View event</a>'
+                        '<dl>' +
+                        '<dt>Event name</dt>' +
+                        '<dd><a href="' + event.link + '">' + event.name + '</a></dd>' +
+                        '<dt>City</dt>' +
+                        '<dd><a href="' + event.city_link + '">' + event.city + '</a></dd>' +
+                        '<dt>League</dt>' +
+                        '<dd><a href="' + event.league_link + '">' + event.league + '</a></dd>' +
+                        '</dl>' +
+                        '</div>' +
+                        '<a class="button" href="' + event.link + '">View event</a>'
                 });
 
-                google.maps.event.addListener(
-                        markers[{{ loop.index }}],
-                        'click',
-                        function(e){
-                            // Hide all other info windows
-                            for (var key in infowindows) {
-                                infowindows[key].close();
-                            }
-                            infowindows[{{ loop.index }}].open(map, markers[{{ loop.index }}]);
-                        }
-                );
-            {% endfor %}
+            markers.push(marker);
 
+            google.maps.event.addListener(
+                marker,
+                'click',
+                function(e){
+                    // Hide all other info windows
+                    for (var i = 0, infowindow; infowindow = (markers[i] ? markers[i].infowindow : undefined); ++i) {
+                        infowindow.close();
+                    }
+                    marker.infowindow.open(map, marker);
+                }
+            );
+        }
+
+        function fitToMarkers()
+        {
             // Auto-zoom map to fit markers/
             // Credit to Google's Polymer-project
             // https://github.com/PolymerLabs/google-map/blob/master/google-map.html#L536
 
             var latLngBounds = new google.maps.LatLngBounds();
             for (var i = 0, m; m = markers[i]; ++i) {
-                latLngBounds.extend(new google.maps.LatLng(m.latitude, m.longitude));
+                latLngBounds.extend(new google.maps.LatLng(m.position.lat(), m.position.lng()));
             }
 
             // For one marker, don't alter zoom, just center it.
@@ -187,6 +223,7 @@
 
             map.setCenter(latLngBounds.getCenter());
         }
+
         google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 {% endblock %}
