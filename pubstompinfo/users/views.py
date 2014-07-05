@@ -44,7 +44,7 @@ def load_user(user_id):
             mem_cache.set(_update_name_lock_key, True, timeout=app.config['UPDATE_USER_NAME_TIMEOUT'])
 
             # Update user's name
-            _user.update_steam_name()
+            _user.update_steam_data()
 
             # Set key to say we've updated the name.  We'll re-run this when this key expires
             mem_cache.set(_update_name_updated_key, True, timeout=app.config['UPDATE_USER_NAME_TIMEOUT'])
@@ -203,7 +203,7 @@ def update_name(_id):
 
     # Keep a record of old name and new name, to log.
     old_name = _user.name
-    _user.update_steam_name()  # Actually do the update
+    _user.update_steam_data()  # Actually do the update
     new_name = _user.name
 
     sentry.captureMessage("Manually triggered a user name update.", extra={

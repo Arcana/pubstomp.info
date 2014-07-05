@@ -33,12 +33,16 @@ class User(db.Model):
     # The models columns
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+    avatar_small = db.Column(db.String(255))
+    avatar_large = db.Column(db.String(255))
+
     email = db.Column(db.String(64), unique=False, nullable=True)
     enabled = db.Column(db.Boolean, default=True, nullable=False)
-    first_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     admin = db.Column(db.Boolean, default=False)
     show_ads = db.Column(db.Boolean, default=True)
+
+    first_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Set default order by
     __mapper_args__ = {
@@ -112,9 +116,9 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update_steam_name(self):
+    def update_steam_data(self):
         """
-        Updates this user's name from Steam, and saves it to the database.
+        Updates this user's data from Steam, and saves it to the database.
         """
         # Called every page load for current_user (API is cached)
         steam_account_info = steam.user.profile(self.steam_id)
@@ -122,6 +126,8 @@ class User(db.Model):
             if steam_account_info is not None:
                 if self.name is not steam_account_info.persona:
                     self.name = steam_account_info.persona
+                    self.avatar_small = steam_account_info.avatar_small
+                    self.avatar_large = steam_account_info.avatar_large
                     db.session.add(self)
                     db.session.commit()
         except steam.api.HTTPError:
