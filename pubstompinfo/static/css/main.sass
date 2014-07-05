@@ -55,6 +55,12 @@ main > section
   &.event-page
     @include breakpoint($medium-screen)
       article
+        @include span-columns(6)
+      aside
+        @include span-columns(6)
+
+    @include breakpoint($large-screen)
+      article
         @include span-columns(8)
       aside
         @include span-columns(4)
@@ -92,10 +98,10 @@ main > section
         .google-map
           min-height: 200px
 
-
-
-
-
+      button,
+      a.button
+        text-align: center
+        width: 100%
 
   @include breakpoint($medium-screen)
     &.home-page

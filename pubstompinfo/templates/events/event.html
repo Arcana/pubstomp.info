@@ -90,9 +90,13 @@
             <section class="league-details">
                 <h3>{{ event.league.name }}</h3>
 
+                <a href="{{ url_for('leagues.league', _id=event.league.id) }}">
+                    <img src="{{ event.league.image }}" alt="{{ event.league.name }}"/>
+                </a>
+
                 <p>{{ event.league.description }}</p>
 
-                <a class="button" href="{{ url_for('leagues.league', _id=event.league.id) }}">View other Pubstomps</a>
+                <a class="button" href="{{ url_for('leagues.league', _id=event.league.id) }}">View other pubstomps</a>
             </section>
         </aside>
 
