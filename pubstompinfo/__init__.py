@@ -8,7 +8,6 @@ from flask.ext.cache import Cache
 from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.pagedown import PageDown
 from flask.ext.markdown import Markdown
 from raven.contrib.flask import Sentry
 import steam
@@ -31,9 +30,7 @@ fs_cache = Cache(app, config=app.config["CACHE_FS"])
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 oid = OpenID(app)
-pagedown = PageDown(app)
-markdown = Markdown(app, safe_mode='escape')
-
+markdown = Markdown(app, safe_mode="escape")
 sentry = Sentry(app)
 
 # Setup steamodd

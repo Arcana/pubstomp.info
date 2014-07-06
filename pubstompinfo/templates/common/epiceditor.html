@@ -1,0 +1,24 @@
+{# Stuff we'll need for any pages we'll use EpicEditor on. #}
+
+{% macro resources() %}
+    {% if config['DEBUG'] %}
+        <script src="{{ url_for('static', filename='bower/epiceditor/epiceditor/js/epiceditor.js') }}"></script>
+    {% else %}
+        <script src="{{ url_for('static', filename='bower/epiceditor/epiceditor/js/epiceditor.min.js') }}"></script>
+    {% endif %}
+{% endmacro %}
+
+{% macro epiceditor(container_id="epiceditor", textarea_id="epiceditor_textarea") %}
+    <script>
+        (function () {
+            var editor = new EpicEditor({
+                container: '{{ container_id }}',
+                textarea: '{{ textarea_id }}',
+                basePath: '{{ url_for('static', filename='bower/epiceditor/epiceditor/') }}',
+                button: {
+                    bar: true
+                }
+            }).load();
+        })();
+    </script>
+{% endmacro %}

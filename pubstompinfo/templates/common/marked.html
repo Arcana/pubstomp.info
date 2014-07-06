@@ -1,0 +1,19 @@
+{# Stuff we'll need for any pages we use Marked on. #}
+
+{% macro resources() %}
+    <script src="{{ url_for('static', filename='bower/marked/lib/marked.js') }}"></script>
+{% endmacro %}
+
+{% macro marked_options() %}
+    <script>
+        marked.setOptions({
+            gfm: true, // Github Flavoured Markdown
+            tables: true,
+            breaks: false,
+            pedantic: false,
+            sanitize: true,
+            smartLists: true,
+            smartypants: false
+        });
+    </script>
+{% endmacro %}

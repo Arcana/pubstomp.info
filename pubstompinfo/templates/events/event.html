@@ -1,3 +1,4 @@
+{% from "common/marked.html" import resources as marked_resources, marked_options with context %}
 {% extends "layout.html" %}
 
 {% block content %}
@@ -45,7 +46,8 @@
                 </table>
             {% endif %}
 
-            <div class="description">{{ event.description|markdown }}</div>
+            {# We'll render this using Python's markdown as a non-JS default, but we'll use Marked clientside to do a better rendering job. #}
+            <div class="description marked" data-markdown="{{ event.description }}">{{ event.description|markdown }}</div>
 
             <h2>Organisers</h2>
             <ul>
@@ -176,5 +178,16 @@
             );
         }
         google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+
+    {# Markdown parser #}
+    {{ marked_resources() }}
+    {{ marked_options() }}
+    <script>
+        $("document").ready(function(){
+            $('.marked').each(function(i, elem){
+                elem.innerHTML = marked(elem.getAttribute('data-markdown'));
+            });
+        });
     </script>
 {% endblock %}

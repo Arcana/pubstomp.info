@@ -1,6 +1,5 @@
 from flask.ext.wtf import Form
-from flask.ext.pagedown.fields import PageDownField
-from wtforms import TextField, IntegerField, FormField, FieldList, DateTimeField, DecimalField
+from wtforms import TextField, IntegerField, FormField, FieldList, DateTimeField, DecimalField, TextAreaField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import Required, Length, URL, Optional, ValidationError
 from ..forms import AutocompleteField
@@ -68,7 +67,7 @@ class EventForm(Form):
                              )
 
     name = TextField("Name", validators=[Required(), Length(max=64)])
-    description = PageDownField("Description", validators=[Optional()],
+    description = TextAreaField("Description", validators=[Optional()],
                                 description="Enter some notes about your event. You can use Markdown for formatting here; <a href=\"https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet\" target=\"_blank\">cheatsheet</a>.")
     website = TextField("Website", validators=[Optional(), Length(max=128), URL()])
 

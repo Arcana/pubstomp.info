@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
-{% from "macros.html" import render_field, render_typeahead_field %}
+{% from "common/marked.html" import resources as marked_resources, marked_options with context %}
+{% from "common/epiceditor.html" import resources as ee_resources, epiceditor with context %}
+{% from "macros.html" import render_field, render_typeahead_field, render_epiceditor_field %}
 
 {% block content %}
     <section class="event-page">
@@ -22,7 +24,7 @@
                     {{ render_typeahead_field(form.city) }}
                 </div>
 
-                {{ render_field(form.description, rows=5) }}
+                {{ render_epiceditor_field(form.description) }}
             </fieldset>
 
             <fieldset id="days">
@@ -80,12 +82,18 @@
     </section>
 {% endblock %}
 
+{% block styles %}
+    {{ super() }}
+    {{ ee_styles() }}
+{% endblock %}
+
 {% block scripts %}
     {{ super() }}
 
     <script src="{{ url_for('static', filename="bower/typeahead.js/dist/typeahead.bundle.js") }}"></script>
     <script>
 
+        // Used for adding/removing field rows.
         // Credit to http://stackoverflow.com/a/8396020/1930516
         function clone_field_list(selector) {
             var new_element = $(selector).clone(true);
@@ -125,7 +133,7 @@
                 $('input[name="city"]').val(datum.value);
             });
 
-            // Days
+            // Days add/remove functionality
             $('#days button#new-day').click(function (e) {
                 e.preventDefault();
                 clone_field_list('#days .day:last');
@@ -145,6 +153,7 @@
             src="//maps.googleapis.com/maps/api/js?key={{ config['GMAPS_API_KEY'] }}">
     </script>
     <script type="text/javascript">
+        // Google Maps
         function initialize() {
 
             var $lat_input = $('input[name="venue-latitude"]');
@@ -223,5 +232,11 @@
         google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 
-    {{ pagedown.include_pagedown() }}
+    {# EpicEditor scripts #}
+    {{ ee_resources() }}
+
+    {# EpicEditor include a built-in copy of Marked.  We just need to set our own options here to override EpicEditors (unsanitized) defaults. #}
+    {{ marked_options() }}
+
+    {{ epiceditor("description_editor", "description") }}
 {% endblock %}

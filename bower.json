@@ -19,6 +19,8 @@
     "neat": "~1.6.0",
     "normalize.css": "~3.0.1",
     "jquery": "~2.1.1",
-    "typeahead.js": "~0.10.2"
+    "typeahead.js": "~0.10.2",
+    "epiceditor": "~0.2.2",
+    "marked": "~0.3.2"
   }
 }
