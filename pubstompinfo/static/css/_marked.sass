@@ -1,0 +1,44 @@
+// Styling for Markdown stuff
+.marked
+  $marked-background: lighten($base-body-color, 10)
+  $marked-border-color: lighten($base-border-color, 10)
+  background: $marked-background
+  padding: $base-line-height / 2
+  border-radius: $base-border-radius
+
+  // Lists
+  $list-styles: (ul: disc, ol: decimal)
+  @each $elem, $style in $list-styles
+    #{$elem}
+      margin-bottom: $base-line-height / 2
+      li
+        list-style: $style
+        margin-left: $base-line-height
+
+  // Code blocks
+  pre
+    padding: $base-line-height / 2
+    background: lighten($marked-background, 5)
+    border: 1px solid lighten($marked-border-color, 5)
+    border-radius: $base-border-radius
+
+  // Tables
+  table
+    border-radius: $base-border-radius
+    background: lighten($marked-background, 5)
+    border: 1px solid lighten($marked-border-color, 5)
+    border-collapse: separate
+
+    tr
+      &:last-of-type td
+        border-bottom: 0
+
+      th:first-child,
+      td:first-child
+        padding-left: $base-line-height / 2
+
+      th:last-child,
+      td:last-child
+        padding-right:  $base-line-height / 2
+
+
